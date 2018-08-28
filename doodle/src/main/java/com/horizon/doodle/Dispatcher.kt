@@ -83,13 +83,14 @@ internal object Dispatcher {
 
         if (bitmap == null) {
             val loader = Worker(request, imageView)
-            loader.setPriority(request.priority)
-                    .setHostHash(request.hostHash)
+            loader.priority(request.priority)
+                    .hostHash(request.hostHash)
                     .execute()
 
             if (waiter != null && !loader.isDone && !loader.isCancelled) {
                 try {
-                    waiter.result = loader[waiter.timeout, TimeUnit.MILLISECONDS] as Bitmap
+                    @Suppress("ReplaceGetOrSet")
+                    waiter.result = loader.get(waiter.timeout, TimeUnit.MILLISECONDS) as Bitmap
                 } catch (t: Throwable) {
                     LogProxy.e(TAG, t)
                 }

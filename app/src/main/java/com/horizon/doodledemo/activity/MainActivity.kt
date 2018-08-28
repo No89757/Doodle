@@ -20,7 +20,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         findViewById<View>(R.id.test_gif_btn).setOnClickListener(this)
         findViewById<View>(R.id.rotate_image).setOnClickListener(this)
 
-        //new DownloadTask().setHost(this).execute();
+        //new DownloadTask().host(this).execute();
     }
 
     override fun onClick(v: View) {

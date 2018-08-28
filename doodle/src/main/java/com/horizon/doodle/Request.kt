@@ -287,7 +287,7 @@ class Request {
      * @param host may be one of Activity, Fragment or Dialog
      * @see com.horizon.task.UITask.setHost
      */
-    fun setHost(host: Any?): Request {
+    fun host(host: Any?): Request {
         this.hostHash = System.identityHashCode(host)
         return this
     }
