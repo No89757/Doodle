@@ -1,7 +1,6 @@
 package com.horizon.doodle;
 
 
-import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,7 +155,7 @@ class RecycledInputStream extends InputStream {
      *                     invoking its {@link #close()} method,
      *                     or an I/O error occurs.
      */
-    public int read(@NonNull byte b[], int off, int len)
+    public int read( byte b[], int off, int len)
             throws IOException {
         if ((off | len | (off + len) | (b.length - (off + len))) < 0) {
             throw new IndexOutOfBoundsException();

@@ -9,6 +9,9 @@ import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
+import com.horizon.doodle.interfaces.CacheInterceptor
+import com.horizon.doodle.interfaces.Callback
+import com.horizon.doodle.interfaces.SimpleTarget
 import com.horizon.doodle.transform.Transformation
 import com.horizon.task.base.Priority
 import java.lang.ref.WeakReference
@@ -58,7 +61,6 @@ class Request {
 
     // target
     internal var waiter: Waiter? = null
-    internal var resultListener: ResultListener? = null
     internal var simpleTarget: SimpleTarget? = null
     internal var callback: Callback? = null
     internal var targetReference: WeakReference<ImageView>? = null
@@ -79,7 +81,7 @@ class Request {
      * We use request key to identify bitmap(both memory cache and disk cache), path is part of key.<br></br>
      * Resource name may change input different version (rename or resource confusion). <br></br>
      * Disable disk cache for loading resource image by default. <br></br>
-     * You could called [.diskCacheStrategy] if you ensured resource name not change. <br></br>
+     * You could called [diskCacheStrategy] if you ensured resource name not change. <br></br>
      *
      * @param resID id of drawable or raw
      */
@@ -117,12 +119,12 @@ class Request {
     }
 
     /**
-     * not to save and take bitmap from [MemoryCache], <br></br>
+     * not to save and take bitmap from [LruCache], <br></br>
      * input instead we put and get bitmap from [WeakCache]. <br></br>
      * if you want to not cache bitmap input any cache(input memory),
-     * use [.noCache]
+     * use [noCache]
      *
-     * @param skip not cache to [MemoryCache] if true
+     * @param skip not cache to [LruCache] if true
      */
     fun skipMemoryCache(skip: Boolean): Request {
         this.skipMemoryCache = skip
@@ -139,8 +141,8 @@ class Request {
      * 1、Source file may change when path is constant,
      * 2、Debug decoding.
      *
-     * @see .skipMemoryCache
-     * @see .diskCacheStrategy
+     * @see skipMemoryCache
+     * @see diskCacheStrategy
      */
     fun noCache(): Request {
         this.skipAllMemory = true
@@ -292,16 +294,11 @@ class Request {
         return this
     }
 
+    /**
+     * You can take charge of cache by yourself in case OkHttp drop cache by LRU rule.
+     */
     fun cacheInterceptor(interceptor: CacheInterceptor): Request {
         this.cacheInterceptor = interceptor
-        return this
-    }
-
-    /**
-     * @see ResultListener.onResult
-     */
-    fun listener(listener: ResultListener): Request {
-        this.resultListener = listener
         return this
     }
 

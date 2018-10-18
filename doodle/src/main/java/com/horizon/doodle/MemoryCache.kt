@@ -1,71 +1,48 @@
 package com.horizon.doodle
 
+
 import android.content.ComponentCallbacks2
 import android.graphics.Bitmap
-import android.util.Log
-import com.horizon.task.base.LogProxy
-import java.text.DecimalFormat
-import java.util.*
 
+import java.util.concurrent.atomic.AtomicBoolean
 
-internal object MemoryCache  {
-    private val cache = LinkedHashMap<Long, BitmapWrapper>(16, 0.75f, true)
-    private var sum: Long = 0
-    private val minSize: Long = Runtime.getRuntime().maxMemory() / 32
+/**
+ * manager of [LruCache] and [WeakCache],
+ * gather some common operation.
+ */
+internal object MemoryCache {
+    private val maxMemory = Runtime.getRuntime().maxMemory()
+    private const val LOW_MEMORY = (8 shl 20).toLong()
+    private const val CRITICAL_MEMORY = (3 shl 20).toLong()
 
-    @Synchronized
-    operator fun get(key: Long?): Bitmap? {
-        val wrapper = cache[key]
-        return wrapper?.bitmap
+    private val checking = AtomicBoolean(false)
+
+    fun getBitmap(key: Long): Bitmap? {
+        var bitmap = LruCache[key]
+        if (bitmap == null) {
+            bitmap = WeakCache[key]
+        }
+        return bitmap
     }
 
-    @Synchronized
-    fun clearMemory() {
-        trimToSize(0)
-    }
-
-    @Synchronized
-    fun trimMemory(level: Int) {
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
-            trimToSize(0)
-        } else if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND || level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
-            trimToSize(Math.max(sum shr 1, minSize))
+    fun putBitmap(key: Long, bitmap: Bitmap, skipMemoryCache: Boolean) {
+        if (skipMemoryCache) {
+            WeakCache.put(key, bitmap)
+        } else {
+            LruCache.put(key, bitmap)
         }
     }
 
-    @Synchronized
-    fun put(key: Long, bitmap: Bitmap?) {
-        val capacity = Config.memoryCacheCapacity
-        if (bitmap == null || capacity <= 0) {
-            return
-        }
-        var wrapper: BitmapWrapper? = cache[key]
-        if (wrapper == null) {
-            wrapper = BitmapWrapper(bitmap)
-            cache[key] = wrapper
-            sum += wrapper.bytesCount.toLong()
-            if (LogProxy.isDebug) {
-                val df = DecimalFormat("0.00")
-                Log.d("MemoryCache", "size:" + Utils.formatSize(wrapper.bytesCount.toLong())
-                        + "  bitmap:" + bitmap.width + "x" + bitmap.height
-                        + "  state:" + df.format((100f * sum / capacity).toDouble()) + "%"
-                        + "  count:" + cache.size)
+    fun checkMemory() {
+        if (checking.compareAndSet(false, true)) {
+            val runtime = Runtime.getRuntime()
+            val remaining = maxMemory - runtime.totalMemory() + runtime.freeMemory()
+            if (remaining < CRITICAL_MEMORY) {
+                LruCache.clearMemory()
+            } else if (remaining < LOW_MEMORY) {
+                LruCache.trimMemory(ComponentCallbacks2.TRIM_MEMORY_BACKGROUND)
             }
-            if (sum > capacity) {
-                trimToSize(capacity * 9 / 10)
-            }
-        }
-    }
-
-    private fun trimToSize(size: Long) {
-        val iterator = cache.entries.iterator()
-        while (iterator.hasNext() && sum > size) {
-            val entry = iterator.next()
-            val wrapper = entry.value
-            WeakCache.put(entry.key, wrapper.bitmap)
-            iterator.remove()
-            sum -= wrapper.bytesCount.toLong()
+            checking.set(false)
         }
     }
 }
-

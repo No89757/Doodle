@@ -1,5 +1,5 @@
 # Doodle
-[ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg?version=1.0.2) ](https://bintray.com/horizon757/maven/Doodle/1.0.2/link)
+[ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion)
 
 Doodle is an efficient image loader for Android.
 
@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.0.2'
+    implementation 'com.horizon.doodle:doodle:1.0.5'
 }
 ```
 

@@ -19,8 +19,8 @@ internal object DiskCache {
     private var sum: Long = 0
     private lateinit var cachePath: String
 
-    private var channel: FileChannel? = null
-    private var buffer: MappedByteBuffer? = null
+    private lateinit var channel: FileChannel
+    private lateinit var buffer: MappedByteBuffer
     private var journalEnd: Int = 0
 
     private val journals: HashMap<Long, JournalValue> by lazy {
@@ -53,7 +53,7 @@ internal object DiskCache {
             value = journals[key]
             if (value != null) {
                 value!!.accessTime = System.currentTimeMillis()
-                buffer!!.putLong(value!!.offset, value!!.accessTime)
+                buffer.putLong(value!!.offset, value!!.accessTime)
             }
         }
         return if (value != null) {
@@ -72,7 +72,7 @@ internal object DiskCache {
         if (value == null) {
             try {
                 val file = File(keyToPath(key!!))
-                if (Utils.existFile(file)) {
+                if (Utils.makeFileIfNotExist(file)) {
                     saveBitmap(file, bitmap)
                     synchronized(this) {
                         addJournal(key, file.length())
@@ -82,19 +82,18 @@ internal object DiskCache {
             } catch (e: Exception) {
                 LogProxy.e(TAG, e)
             }
-
         }
     }
 
-    fun delete(key: Long?) {
+    fun delete(key: Long) {
         synchronized(this) {
             val value = journals[key]
             if (value != null) {
                 journals.remove(key)
                 try {
-                    buffer!!.putLong(value.offset, 0L)
-                    File(keyToPath(key!!)).delete()
-                } catch (e: Throwable) {
+                    buffer.putLong(value.offset, 0L)
+                    File(keyToPath(key)).delete()
+                } catch (e: Exception) {
                     LogProxy.e(TAG, e)
                 }
             }
@@ -131,22 +130,22 @@ internal object DiskCache {
             }
 
             val newLen = alignLength(((count - i) * 16).toLong())
-            if (newLen < buffer!!.capacity()) {
-                buffer!!.force()
-                channel!!.truncate(newLen)
-                buffer = channel!!.map(FileChannel.MapMode.READ_WRITE, 0, newLen)
+            if (newLen < buffer.capacity()) {
+                buffer.force()
+                channel.truncate(newLen)
+                buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, newLen)
             }
-            buffer!!.clear()
+            buffer.clear()
             while (i < count) {
                 val value = journalList[i++]
-                buffer!!.putLong(value.key)
-                value.offset = buffer!!.position()
-                buffer!!.putLong(value.accessTime)
+                buffer.putLong(value.key)
+                value.offset = buffer.position()
+                buffer.putLong(value.accessTime)
             }
-            journalEnd = buffer!!.position()
+            journalEnd = buffer.position()
 
-            while (buffer!!.hasRemaining()) {
-                buffer!!.putLong(0L)
+            while (buffer.hasRemaining()) {
+                buffer.putLong(0L)
             }
         }
     }
@@ -196,26 +195,26 @@ internal object DiskCache {
     @Throws(IOException::class)
     private fun readJournal(map: HashMap<Long, JournalValue>) {
         val journalFile = File(cachePath + JOURNAL_NAME)
-        if (Utils.existFile(journalFile)) {
+        if (Utils.makeFileIfNotExist(journalFile)) {
             val accessFile = RandomAccessFile(journalFile, "rw")
             val length = alignLength(accessFile.length())
             channel = accessFile.channel
-            buffer = channel!!.map(FileChannel.MapMode.READ_WRITE, 0, length)
-            buffer!!.position(0)
-            while (buffer!!.hasRemaining()) {
-                val key = buffer!!.long
+            buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, length)
+            buffer.position(0)
+            while (buffer.hasRemaining()) {
+                val key = buffer.long
                 if (key == 0L) {
-                    journalEnd = buffer!!.position() - 8
+                    journalEnd = buffer.position() - 8
                     break
                 }
-                val accessTime = buffer!!.long
+                val accessTime = buffer.long
                 if (accessTime > 0) {
-                    map[key] = JournalValue(key, accessTime, 0, buffer!!.position() - 8)
+                    map[key] = JournalValue(key, accessTime, 0, buffer.position() - 8)
                 }
             }
 
-            if (buffer!!.position() == buffer!!.capacity()) {
-                journalEnd = buffer!!.position()
+            if (buffer.position() == buffer.capacity()) {
+                journalEnd = buffer.position()
             }
         }
     }
@@ -231,13 +230,13 @@ internal object DiskCache {
     @Throws(IOException::class)
     private fun appendJournal(key: Long, accessTime: Long): Int {
         val end = journalEnd
-        if (end + 16 > buffer!!.capacity()) {
-            buffer!!.force()
-            buffer = channel!!.map(FileChannel.MapMode.READ_WRITE, 0, (end + PAGE_SIZE))
+        if (end + 16 > buffer.capacity()) {
+            buffer.force()
+            buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, (end + PAGE_SIZE))
         }
-        buffer!!.position(end)
-        buffer!!.putLong(key)
-        buffer!!.putLong(accessTime)
+        buffer.position(end)
+        buffer.putLong(key)
+        buffer.putLong(accessTime)
         journalEnd = end + 16
         return end + 8
     }

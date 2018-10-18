@@ -2,8 +2,9 @@ package com.horizon.doodle
 
 
 import android.graphics.Bitmap
+import com.horizon.doodle.interfaces.GifDecoder
 
-object Config  {
+object Config {
     internal var userAgent: String = ""
     internal var diskCachePath: String = ""
     internal var diskCacheCapacity: Long = 128L shl 20

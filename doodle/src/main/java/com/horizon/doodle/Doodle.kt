@@ -23,8 +23,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.WorkerThread
-import com.horizon.task.lifecycle.Event
+import com.horizon.task.lifecycle.LifeEvent
 import com.horizon.task.lifecycle.LifecycleManager
 import java.io.File
 
@@ -45,11 +44,11 @@ object Doodle {
             }
 
             override fun onActivityResumed(activity: Activity) {
-                LifecycleManager.notify(activity, Event.SHOW)
+                LifecycleManager.notify(activity, LifeEvent.SHOW)
             }
 
             override fun onActivityPaused(activity: Activity) {
-                LifecycleManager.notify(activity, Event.HIDE)
+                LifecycleManager.notify(activity, LifeEvent.HIDE)
             }
 
             override fun onActivityStopped(activity: Activity) {
@@ -59,7 +58,7 @@ object Doodle {
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-                LifecycleManager.notify(activity, Event.DESTROY)
+                LifecycleManager.notify(activity, LifeEvent.DESTROY)
             }
         })
     }
@@ -80,12 +79,12 @@ object Doodle {
 
     @JvmStatic
     fun trimMemory(level: Int) {
-        MemoryCache.trimMemory(level)
+        LruCache.trimMemory(level)
     }
 
     @JvmStatic
     fun clearMemory() {
-        MemoryCache.clearMemory()
+        LruCache.clearMemory()
     }
 
     /**
@@ -114,7 +113,6 @@ object Doodle {
     }
 
     @JvmStatic
-    @WorkerThread
     fun downloadOnly(url: String): File? {
         return Downloader.downloadOnly(url)
     }
@@ -128,17 +126,17 @@ object Doodle {
      * @param tag         identify the bitmap
      * @param bitmap      bitmap
      * @param toWeakCache cache to [WeakCache] if true,
-     * otherwise cache to [MemoryCache]
+     * otherwise cache to [LruCache]
      */
     @JvmStatic
     @JvmOverloads
     fun cacheBitmap(tag: String, bitmap: Bitmap, toWeakCache: Boolean = true) {
-        CacheManager.putBitmap(MHash.hash64(tag), bitmap, toWeakCache)
+        MemoryCache.putBitmap(MHash.hash64(tag), bitmap, toWeakCache)
     }
 
     @JvmStatic
     fun getCacheBitmap(tag: String): Bitmap? {
-        return CacheManager.getBitmap(MHash.hash64(tag))
+        return MemoryCache.getBitmap(MHash.hash64(tag))
     }
 
     /**

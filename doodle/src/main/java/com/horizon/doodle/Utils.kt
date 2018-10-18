@@ -153,11 +153,11 @@ internal object Utils {
     }
 
     /**
-     * check if file exist, create new file if not.
+     * check if file exists, create new file if not.
      * if there is a directory with a name same as the file, return false.
      */
     @Throws(IOException::class)
-    fun existFile(file: File?): Boolean {
+    fun makeFileIfNotExist(file: File?): Boolean {
         return when {
             file == null -> false
             file.isFile -> true
@@ -170,7 +170,7 @@ internal object Utils {
 
     @Throws(IOException::class)
     fun copyFile(src: File?, des: File): Boolean {
-        if (src == null || !src.isFile || !existFile(des)) {
+        if (src == null || !src.isFile || !makeFileIfNotExist(des)) {
             return false
         }
         val inStream = FileInputStream(src)

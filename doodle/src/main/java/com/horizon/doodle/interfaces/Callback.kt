@@ -1,4 +1,4 @@
-package com.horizon.doodle
+package com.horizon.doodle.interfaces
 
 
 import android.graphics.Bitmap

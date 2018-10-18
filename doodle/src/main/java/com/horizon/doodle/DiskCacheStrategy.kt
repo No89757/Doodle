@@ -19,7 +19,7 @@ object DiskCacheStrategy {
      */
     const val RESULT = 2
     /**
-     * Caches with both [.SOURCE] and [.RESULT].
+     * Caches with both [SOURCE] and [RESULT].
      */
     const val ALL = 3
 }

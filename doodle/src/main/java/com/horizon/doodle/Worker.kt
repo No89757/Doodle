@@ -18,7 +18,6 @@ import java.lang.ref.WeakReference
 internal class Worker(private val request: Request, imageView: ImageView?) : UITask<Void, Void, Any>() {
     private val key: Long = request.key
 
-    private var fromMemory = false
     private var fromDiskCache = false
 
     override val executor: TaskExecutor
@@ -60,11 +59,9 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
                 return null
             }
 
-            bitmap = CacheManager.getBitmap(key)
-            if (bitmap != null) {
-                fromMemory = true
-            } else {
-                CacheManager.checkMemory()
+            bitmap = MemoryCache.getBitmap(key)
+            if (bitmap == null) {
+                MemoryCache.checkMemory()
 
                 val filePath = DiskCache[key]
                 fromDiskCache = !TextUtils.isEmpty(filePath)
@@ -79,7 +76,7 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
                 bitmap = transform(request, bitmap)
                 if (bitmap != null) {
                     if (!request.skipAllMemory) {
-                        CacheManager.putBitmap(key, bitmap, request.skipMemoryCache)
+                        MemoryCache.putBitmap(key, bitmap, request.skipMemoryCache)
                     }
                     if (!fromDiskCache && request.diskCacheStrategy and DiskCacheStrategy.RESULT != 0) {
                         storeResult(key, bitmap)
@@ -113,7 +110,7 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
         }
         request.simpleTarget = null
         request.callback = null
-        Dispatcher.feedback(request, null, null, fromMemory, false)
+        Dispatcher.feedback(request, null, null, false)
     }
 
     override fun onPostExecute(result: Any?) {
@@ -121,7 +118,7 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
         if (imageView != null) {
             imageView.tag = null
         }
-        Dispatcher.feedback(request, imageView, result, fromMemory, false)
+        Dispatcher.feedback(request, imageView, result, false)
     }
 
     private fun transform(request: Request, source: Bitmap?): Bitmap? {

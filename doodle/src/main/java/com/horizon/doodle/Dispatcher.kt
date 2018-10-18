@@ -66,7 +66,7 @@ internal object Dispatcher {
             return
         }
 
-        val bitmap = CacheManager.getBitmap(request.key)
+        val bitmap = MemoryCache.getBitmap(request.key)
 
         val waiter = request.waiter
         if (waiter != null && (bitmap != null || waiter.timeout == 0L)) {
@@ -74,7 +74,7 @@ internal object Dispatcher {
             return
         }
 
-        feedback(request, imageView, bitmap, true, true)
+        feedback(request, imageView, bitmap, true)
 
         if (imageView != null && bitmap == null && pauseFlag) {
             pause(request, imageView)
@@ -124,8 +124,6 @@ internal object Dispatcher {
     }
 
     private fun stall(request: Request, imageView: ImageView?) {
-        request.resultListener?.onResult(false)
-
         if (request.simpleTarget != null) {
             request.simpleTarget!!.onComplete(null)
         } else if (imageView != null) {
@@ -140,24 +138,18 @@ internal object Dispatcher {
         }
     }
 
-    fun feedback(request: Request, imageView: ImageView?, result: Any?,
-                 fromMemory: Boolean, beforeLoading: Boolean) {
+    fun feedback(request: Request, imageView: ImageView?, result: Any?, beforeLoading: Boolean) {
         //  no matter cancel or not, try to stop animated drawable ( if set )
         if (!beforeLoading && request.targetReference != null) {
             stopAnimDrawable(request.targetReference!!.get())
         }
 
-        val bitmap = result as? Bitmap
-
-        val isFinished = !beforeLoading || bitmap != null
-
-        if (isFinished) {
-            request.resultListener?.onResult(result != null)
-        }
-
         if (request.waiter != null) {
             return
         }
+
+        val bitmap = result as? Bitmap
+        val isFinished = !beforeLoading || bitmap != null
 
         if (isFinished && request.simpleTarget != null) {
             request.simpleTarget!!.onComplete(bitmap)
@@ -176,7 +168,7 @@ internal object Dispatcher {
 
         if (result != null) {
             if (bitmap != null) {
-                if (request.alwaysAnimation || !fromMemory) {
+                if (request.alwaysAnimation || !beforeLoading) {
                     if (request.crossFade) {
                         crossFade(imageView, bitmap, request)
                     } else {

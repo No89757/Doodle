@@ -1,0 +1,98 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'org.jetbrains.dokka-android'
+
+def GROUP = 'com.horizon.doodle'
+def ARTIFACT = 'doodle'
+def VERSION = '1.0.5'
+
+group = GROUP
+version = VERSION
+
+dokka{
+    outputFormat = 'javadoc'
+    moduleName = project.name
+    outputDirectory = "$buildDir/docs"
+}
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    classifier = 'javadoc'
+    from dokka.outputDirectory
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+def srcClassDir = [project.buildDir.absolutePath + "/intermediates/classes/release",
+                   project.buildDir.absolutePath + "/tmp/kotlin-classes/release"]
+
+task makeJar(dependsOn: ['compileReleaseSources'/*, clearJar*/], type: Jar) {
+    delete 'build/libs/' +ARTIFACT + '.jar'
+    baseName  ARTIFACT
+    extension = "jar"
+    from srcClassDir
+    exclude('**/R.class')
+    exclude('**/BuildConfig.class')
+    exclude { it.name.startsWith('R$') }
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+    archives makeJar
+}
+
+def siteUrl = 'https://github.com/No89757/Doodle'
+def gitUrl = 'https://github.com/No89757/Doodle.git'
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                // Add your description here
+                name 'A lightweight key-value storage component'
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'no89757'
+                        name 'John Smith'
+                        email 'across_horizon@qq.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        userOrg = "horizon757"
+        repo = "maven"
+        name = "Doodle"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
