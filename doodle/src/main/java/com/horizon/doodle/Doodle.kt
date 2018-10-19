@@ -118,8 +118,8 @@ object Doodle {
     }
 
     @JvmStatic
-    fun hasSourceCache(url: String): Boolean {
-        return Downloader.hasCache(url)
+    fun getSourceCacheFile(url: String): File?{
+        return Downloader.getSourceCacheFile(url)
     }
 
     /**

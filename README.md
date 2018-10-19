@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.0.5'
+    implementation 'com.horizon.doodle:doodle:1.0.6'
 }
 ```
 
@@ -32,7 +32,6 @@ Doodle.load(removedRotateExif)
         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
         .into(bottomIv)
 ```
-
 
 # License
 See the [LICENSE](LICENSE.md) file for license rights and limitations.

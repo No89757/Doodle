@@ -36,13 +36,11 @@ class Request {
     internal var transformations: MutableList<Transformation>? = null
     // decode input original size if set true
     private var noClip = false
-    internal var fitMax = false
 
     // loading behavior
     internal var gifPriority = true
     internal var priority = Priority.NORMAL
-    internal var skipMemoryCache = false
-    internal var skipAllMemory = false
+    internal var memoryCacheStrategy = MemoryCacheStrategy.LRU
     internal var onlyIfCached = false
     internal var diskCacheStrategy = DiskCacheStrategy.ALL
     internal var cacheInterceptor: CacheInterceptor? = null
@@ -119,15 +117,18 @@ class Request {
     }
 
     /**
-     * not to save and take bitmap from [LruCache], <br></br>
-     * input instead we put and get bitmap from [WeakCache]. <br></br>
-     * if you want to not cache bitmap input any cache(input memory),
-     * use [noCache]
-     *
-     * @param skip not cache to [LruCache] if true
+     * @see [MemoryCacheStrategy]
      */
-    fun skipMemoryCache(skip: Boolean): Request {
-        this.skipMemoryCache = skip
+    fun memoryCacheStrategy(strategy: Int): Request {
+        this.memoryCacheStrategy = strategy
+        return this
+    }
+
+    /**
+     * @see DiskCacheStrategy
+     */
+    fun diskCacheStrategy(strategy: Int): Request {
+        this.diskCacheStrategy = strategy
         return this
     }
 
@@ -141,17 +142,12 @@ class Request {
      * 1、Source file may change when path is constant,
      * 2、Debug decoding.
      *
-     * @see skipMemoryCache
+     * @see memoryCacheStrategy
      * @see diskCacheStrategy
      */
     fun noCache(): Request {
-        this.skipAllMemory = true
+        this.memoryCacheStrategy = MemoryCacheStrategy.LRU
         this.diskCacheStrategy = DiskCacheStrategy.NONE
-        return this
-    }
-
-    fun diskCacheStrategy(strategy: Int): Request {
-        this.diskCacheStrategy = strategy
         return this
     }
 
@@ -185,17 +181,6 @@ class Request {
             transformations = ArrayList(2)
         }
         transformations!!.add(transformation)
-        return this
-    }
-
-    /**
-     * canvas support 4096 * 4096 bitmap at most. <br></br>
-     * if oClip is true, and set fitMax true,<br></br>
-     * we will clip width and height to less or equal then 4096,
-     * while original width or height larger the 4096.
-     */
-    fun fitMaxTexture(fitMax: Boolean): Request {
-        this.fitMax = fitMax
         return this
     }
 
@@ -287,7 +272,7 @@ class Request {
      * set loading task's host
      *
      * @param host may be one of Activity, Fragment or Dialog
-     * @see com.horizon.task.UITask.setHost
+     * @see com.horizon.task.UITask.host
      */
     fun host(host: Any?): Request {
         this.hostHash = System.identityHashCode(host)
@@ -312,7 +297,7 @@ class Request {
 
     /**
      * get the bitmap on current thread. <br></br>
-     * assign sizes with [.override], otherwise it will load with original size.
+     * assign sizes with [override], otherwise it will load with original size.
      *
      *
      * It's recommended to call this method input background thread. <br></br>
@@ -328,7 +313,7 @@ class Request {
      * @throws IllegalStateException    if method not be called from the worker thread
      */
     @JvmOverloads
-    operator fun get(millis: Long = 1000L): Bitmap? {
+    operator fun get(millis: Long = 3000L): Bitmap? {
         if (millis < 0) {
             throw IllegalArgumentException("timeout can't be negative")
         }
@@ -458,11 +443,6 @@ class Request {
         if (clipType == Decoder.NO_CLIP && viewWidth > 0 && viewHeight > 0) {
             clipType = Decoder.CENTER_INSIDE
         }
-
-        // only noClip mode support fitMax
-        if (fitMax && !noClip) {
-            fitMax = false
-        }
     }
 
     override fun toString(): String {
@@ -476,7 +456,6 @@ class Request {
                 .append('x').append(viewHeight)
                 .append(" type:").append(clipType)
                 .append(" config:").append(config)
-                .append(" fitMax:").append(fitMax)
         if (!Utils.isEmpty(transformations)) {
             builder.append(" transforms:")
             for (transformation in transformations!!) {

@@ -2,7 +2,7 @@ package com.horizon.doodle
 
 
 /**
- * caching strategies, refer to glide v3
+ * disk caching strategies, refer to glide v3
  */
 object DiskCacheStrategy {
     /**

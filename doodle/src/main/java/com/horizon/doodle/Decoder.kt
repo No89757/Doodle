@@ -51,7 +51,7 @@ internal object Decoder {
                 rotated = orientation >= ExifInterface.ORIENTATION_TRANSPOSE
             }
 
-            if (!fromDiskCache && (request.fitMax || clipType != NO_CLIP)) {
+            if (!fromDiskCache && (clipType != NO_CLIP)) {
                 options.inJustDecodeBounds = true
                 source.decode(options)
                 if (options.outWidth <= 0 || options.outHeight <= 0) {
@@ -69,19 +69,7 @@ internal object Decoder {
             val vheight = if (rotated) request.viewWidth else request.viewHeight
 
             when (clipType) {
-                NO_CLIP -> {
-                    if (request.fitMax && (dwidth > 4096 || dheight > 4096)) {
-                        options.inScaled = true
-                        if (dwidth > dheight) {
-                            options.inTargetDensity = 4096
-                            options.inDensity = dwidth
-                        } else {
-                            options.inTargetDensity = 4096
-                            options.inDensity = dheight
-                        }
-                    }
-                    bitmap = source.decode(options)
-                }
+                NO_CLIP -> bitmap = source.decode(options)
                 MATRIX -> bitmap = if (dwidth > vwidth || dheight > vheight) {
                     val right = if (dwidth > vwidth) vwidth else dwidth
                     val bottom = if (dheight > vheight) vheight else dheight

@@ -75,8 +75,9 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
                 bitmap = Decoder.decode(source, request, fromDiskCache)
                 bitmap = transform(request, bitmap)
                 if (bitmap != null) {
-                    if (!request.skipAllMemory) {
-                        MemoryCache.putBitmap(key, bitmap, request.skipMemoryCache)
+                    if (request.memoryCacheStrategy != MemoryCacheStrategy.NONE) {
+                        val toWeakCache = request.memoryCacheStrategy == MemoryCacheStrategy.WEAK
+                        MemoryCache.putBitmap(key, bitmap, toWeakCache)
                     }
                     if (!fromDiskCache && request.diskCacheStrategy and DiskCacheStrategy.RESULT != 0) {
                         storeResult(key, bitmap)

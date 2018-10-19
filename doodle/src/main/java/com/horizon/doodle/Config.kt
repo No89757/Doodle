@@ -53,13 +53,16 @@ object Config {
         return this
     }
 
+    /**
+     * Set capacity of [LruCache]
+     */
     fun setMemoryCacheCapacity(capacity: Long): Config {
         this.memoryCacheCapacity = capacity
         return this
     }
 
     /**
-     * set compress format
+     * Set compress format
      *
      * @param format one of [JPEG, PNG, WEBP], default is PNG
      */

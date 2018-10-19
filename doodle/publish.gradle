@@ -4,7 +4,7 @@ apply plugin: 'org.jetbrains.dokka-android'
 
 def GROUP = 'com.horizon.doodle'
 def ARTIFACT = 'doodle'
-def VERSION = '1.0.5'
+def VERSION = '1.0.6'
 
 group = GROUP
 version = VERSION

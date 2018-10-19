@@ -16,9 +16,9 @@ class ImageDemoActivity : BaseActivity() {
 
         val testIv = findViewById<ImageView>(R.id.test_iv)
 
-
-       // Doodle.load(R.raw.lenna).noCache().into(testIv)
-        val url = "https://pic1.zhimg.com/80/63536f2f01409f750162828a980a0380_hd.jpg"
-        Doodle.load(url).into(testIv)
+        //Doodle.load(R.raw.lenna).noCache().into(testIv)
+        val path = "file:///android_asset/lenna.jpg"
+        //val url = "https://pic1.zhimg.com/80/63536f2f01409f750162828a980a0380_hd.jpg"
+        Doodle.load(path).into(testIv)
     }
 }

@@ -5,6 +5,7 @@ import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okio.ByteString
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -87,14 +88,8 @@ internal object Downloader  {
         return null
     }
 
-    fun hasCache(url: String): Boolean {
-        try {
-            val request = Request.Builder().url(url)
-                    .cacheControl(CacheControl.FORCE_CACHE).build()
-            val response = client.newCall(request).execute()
-            return response.isSuccessful
-        } catch (ignore: Exception) {
-        }
-        return false
+    fun getSourceCacheFile(url: String): File? {
+        val cacheFile = File(cacheDirPath + ByteString.encodeUtf8(url).md5().hex() + ".1")
+        return if (cacheFile.exists()) cacheFile else null
     }
 }

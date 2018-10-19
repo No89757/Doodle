@@ -25,8 +25,8 @@ internal object MemoryCache {
         return bitmap
     }
 
-    fun putBitmap(key: Long, bitmap: Bitmap, skipMemoryCache: Boolean) {
-        if (skipMemoryCache) {
+    fun putBitmap(key: Long, bitmap: Bitmap, toWeakCache: Boolean) {
+        if (toWeakCache) {
             WeakCache.put(key, bitmap)
         } else {
             LruCache.put(key, bitmap)
