@@ -54,7 +54,6 @@ public class BaseDialog extends Dialog {
 }
 ```
 
-
 ## request
 ```koltlin
 Doodle.load(removedRotateExif)
@@ -65,7 +64,10 @@ Doodle.load(removedRotateExif)
 请求图片时，如果into()的对象是ImageView, 则Doodle会从ImageView中取出所在Activity作为host,
 若所在页面是Fragment, 或者into()对象不是ImageView, 且又需要生命周期管理的话，需主动调用host(Any)，传入host(所在页面）。
 
-## Doodle
+# API 
+Doodle的API，关注Doodle, Config, Request三个类即可。
+
+## Doodle (框架入口）
 方法 | 作用
 ---|---
 init(Context) : Config | 初始化，传入context, 返回全局配置
@@ -74,7 +76,7 @@ clearMemory() | 移除LruCache中所有bitmap
 load(String): Request | 传入图片路径，返回Request
 load(int): Request | 传入资源ID，返回Request
 load(Uri): Request | 传入URI，返回Request
-downloadOnly(String): File? | 仅下载图片文件，不解码。会走网络请求，不可再UI线程调用
+downloadOnly(String): File? | 仅下载图片文件，不解码。此方法会走网络请求，不可再UI线程调用
 getSourceCacheFile(url: String): File? | 获取原图缓存，无则返回null。不走网络请求，可以在UI线程调用
 cacheBitmap(String,Bitmap,Boolean) |  缓存bitmap到Doodle的MemoryCache, 相当于开放MemoryCache, 复用代码，统一管理。
 getCacheBitmap(String): Bitmap? | 获取缓存在Cache中的bitmap
@@ -82,7 +84,7 @@ pauseRequest() | 暂停往任务队列中插入请求，对RecycleView快速滑�
 resumeRequest() | 恢复请求
 notifyEvent(Any, int) | 发送页面生命周期事件(通知页面销毁以取消请求等）
 
-## Config
+## Config （全局配置）
 方法 | 作用
 ---|---
 setUserAgent(String) | 设置User-Agent头，网络请求将自动填上此Header
@@ -95,7 +97,7 @@ setCompressFormat(Bitmap.CompressFormat) | 设置结果缓存的压缩格式， 
 setDefaultBitmapConfig(Bitmap.Config) | 设置默认的Bitmap.Config，默认为ARGB_8888
 setGifDecoder(GifDecoder) | 设置GIF解码器
 
-## Request
+## Request （图片请求）
 方法 | 作用
 ---|---
 sourceKey(String) | 设置数据源的key <br/> url默认情况下作为Request的key的一部分，有时候url有动态的参数，使得url频繁变化，从而无法缓存。此时可以设置sourceKey,提到path作为Request的key的一部分。
