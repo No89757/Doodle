@@ -46,12 +46,6 @@ public abstract class BaseFragment extends Fragment {
 
 ```kotlin
 public class BaseDialog extends Dialog {
-    private int hostHash;
-    public BaseDialog(@NonNull Activity activity) {
-        super(activity);
-        hostHash = System.identityHashCode(activity);
-    }
-
     @Override
     public void dismiss() {
         super.dismiss();
