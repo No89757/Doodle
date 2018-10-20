@@ -4,7 +4,7 @@
 Doodle 是一个轻量高效的图片加载框架。
 
 # 下载
-```gladle
+```gradle
 repositories {
     jcenter()
 }
@@ -55,8 +55,9 @@ public class BaseDialog extends Dialog {
 ```
 
 ## request
-```koltlin
+```kotlin
 Doodle.load(removedRotateExif)
+        .host(fragment)
         .placeholder(R.color.colorAccent)
         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
         .into(bottomIv)

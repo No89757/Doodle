@@ -6,7 +6,7 @@
 Doodle is an efficient image loader for Android.
 
 # Download
-```gladle
+```gradle
 repositories {
     jcenter()
 }
@@ -57,7 +57,7 @@ public class BaseDialog extends Dialog {
 ```
 
 ## request
-```koltlin
+```kotlin
 Doodle.load(removedRotateExif)
         .host(fragment)
         .placeholder(R.color.colorAccent)
@@ -66,8 +66,8 @@ Doodle.load(removedRotateExif)
 ```
 
 When make request, if the target is ImageView, Doodle will pick the activity to register host.
-But if the requst happens in a Fragment, or target is not ImageView, 
-it's necessary to call host() to make sure the request cancal when **notifyEvent(this, LifeEvent.DESTROY)** calling.
+But if the request happens in a Fragment, or target is not ImageView,
+it's necessary to call host() to make sure the request cancel when **notifyEvent(this, LifeEvent.DESTROY)** calling.
 
 # API 
 
@@ -95,7 +95,7 @@ setUserAgent(String) | sey User-Agent header
 setDiskCachePath(String) | set disk cache path
 setDiskCacheCapacity(Long) |  128M default
 setDiskCacheMaxAge(Long) |  30 days default
-setSourceCacheCapacity(Long) | 256Mdefault
+setSourceCacheCapacity(Long) | 256M default
 setMemoryCacheCapacity(Long) | 1/6 of maxMemory() default
 setCompressFormat(Bitmap.CompressFormat) | PNG default
 setDefaultBitmapConfig(Bitmap.Config) | ARGB_8888 default
@@ -124,8 +124,8 @@ error(Drawable) | |
 goneIfMiss() | set imageView.visibility = View.GONE if get result failed.
 animation(int) | set animation
 animation(Animation) | |
-fadeIn(int) | set fade in animation, default duratuion is 300ms
-crossFate(int) | set cross fade animation, default duratuion is 300ms
+fadeIn(int) | set fade in animation, default duration is 300ms
+crossFate(int) | set cross fade animation, default duration is 300ms
 alwaysAnimation(Boolean) | only do animation if bitmap is not from memory cache in default case, always do it when calling this.
 asBitmap() | not matter source is gif or other format, just decode bitmap 
 host(Any) | bind host(page) to request, when page destroy, request cancel. 
@@ -135,7 +135,7 @@ preLoad() | |
 get(get) : Bitmap? | get bitmap in current thread (block util get result or failed)
 into(SimpleTarget) | get bitmap by callback (no block)
 into(ImageView, Callback) | callback the bitmap in Callback, and return boolean in that method, if return true, Doodle will not setImage again.
-into(ImageView?) | load bitmap(or drawable) into imageview
+into(ImageView?) | load bitmap(or drawable) into ImageView
 
 # License
 See the [LICENSE](LICENSE.md) file for license rights and limitations.
