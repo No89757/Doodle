@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.0.6'
+    implementation 'com.horizon.doodle:doodle:1.0.8'
 }
 ```
 
