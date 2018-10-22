@@ -1,7 +1,9 @@
 # Doodle
 [ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion)
 
-Doodle 是一个轻量高效的图片加载框架。
+Doodle是一个轻量高效的图片加载框架。<br/>
+项目整体逻辑清晰，实现简洁，功能丰富，API友好……<br/>
+总而言之，就是简单、实用。
 
 # 下载
 ```gradle
@@ -129,7 +131,7 @@ host(Any) | 参加[Task](https://www.jianshu.com/p/8afb6cf64eec)的host
 cacheInterceptor(CacheInterceptor) | (原图）缓存拦截器，可自定义单个请求的缓存路径，自己管理缓存，以免被LRU或者过时规则删除
 | | |
 preLoad() | 预加载
-get(get) : Bitmap? | 当前线程获取图片，加载时阻塞当前线程
+get(int) : Bitmap? | 当前线程获取图片，加载时阻塞当前线程，可设定timeout时间(默认3s)，超时未完成则取消任务，返回null。
 into(SimpleTarget) | 加载图片后通过SimpleTarget回调图片(加载是不阻塞当前线程)
 into(ImageView, Callback) | 加载图片图片到ImageView，同时通过Callback回调。如果Callback中返回true, 说明已经处理该bitmap了，则Doodle不会再setBitmap到ImageView了。
 into(ImageView?) | 加载图片图片到ImageView
