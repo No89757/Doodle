@@ -58,7 +58,7 @@ public class BaseDialog extends Dialog {
 
 ## request
 ```kotlin
-Doodle.load(removedRotateExif)
+Doodle.load(url)
         .host(fragment)
         .placeholder(R.color.colorAccent)
         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
