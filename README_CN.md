@@ -127,7 +127,7 @@ fadeIn(int) | 加载成功后显示淡入动画
 crossFate(int) | 这个动画效果是原图从透明度100到0， bitmap从0到100。<br/>当设置placeholder且内存缓存中没有指定图片时， placeholder为原图。<br/>如果没有设置placeholder,  效果和fadeIn差不多。<br/>需要注意的是，这个动画在原图和bitmap宽高不相等时，动画结束时图片会变形。<br/>因此，慎用crossFade。<br/>
 alwaysAnimation(Boolean) | 默认情况下仅在图片是从磁盘或者网络加载出来时才做动画，可通过此方法设置总是做动画
 asBitmap() | 当设置了GifDecoder时，默认情况下只要图片是GIF图片，则用GifDecoder解码。调用此方法后，只取Gif文件第一帧，返回bitmap
-host(Any) | 参加[Task](https://www.jianshu.com/p/8afb6cf64eec)的host
+host(Any) | 参见[Task](https://www.jianshu.com/p/8afb6cf64eec)的host
 cacheInterceptor(CacheInterceptor) | (原图）缓存拦截器，可自定义单个请求的缓存路径，自己管理缓存，以免被LRU或者过时规则删除
 | | |
 preLoad() | 预加载
