@@ -28,16 +28,14 @@ internal object WeakCache {
     @Synchronized
     operator fun get(key: Long?): Bitmap? {
         cleanQueue()
-        val reference = cache[key]
-        return reference?.get()
+        return cache[key]?.get()
     }
 
     @Synchronized
     fun put(key: Long, bitmap: Bitmap?) {
         if (bitmap != null) {
             cleanQueue()
-            val reference = cache[key]
-            if (reference == null) {
+            if (cache[key] == null) {
                 cache[key] = BitmapWeakReference(key, bitmap, queue)
             }
         }

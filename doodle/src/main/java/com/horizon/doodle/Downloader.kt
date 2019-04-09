@@ -41,9 +41,9 @@ internal object Downloader  {
     fun getSource(request: Request): Any? {
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
-            // at OkHttp 3.10.0, we can get cached body (the file) like this,
+            // at OkHttp 3.12.0, we can get cached body (the file) like this,
             // if input later version failed, we need to always covert to StreamSource.
-            val inputStream = response.body()!!.byteStream()
+            val inputStream : InputStream? = response.body()!!.byteStream()
             if (inputStream != null && inputStream.toString().contains("FileInputStream")) {
                 val cacheFile = File(cacheDirPath + Cache.key(request.url()) + ".1")
                 if (cacheFile.exists()) {

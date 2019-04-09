@@ -5,12 +5,8 @@ Doodle 是一个轻量高效的图片加载框架。
 
 # 下载
 ```gradle
-repositories {
-    jcenter()
-}
-
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.0.8'
+    implementation 'com.horizon.doodle:doodle:1.0.9'
 }
 ```
 
@@ -25,7 +21,7 @@ Doodle.init(context)
         .setGifDecoder(gifDecoder)
 ```
 
-为使请求可以在页面销毁时取消请求，或者在页面切换 可见/不可见 时动态调整优先级，需在BaseFragment和BaseDialog （如果有的话）发送生命周期事件。
+为使请求可以在页面销毁时取消请求，或者在页面切换 可见/不可见 时动态调整优先级，需在BaseFragment发送生命周期事件。<br/>
 Activity不需要做这件事，因为在调用init(Context)时Doodle已经做了这件事。
 
 ```kotlin
@@ -62,7 +58,7 @@ Doodle.load(removedRotateExif)
         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
         .into(bottomIv)
 ```
-请求图片时，如果into()的对象是ImageView, 则Doodle会从ImageView中取出所在Activity作为host,
+请求图片时，如果into()的对象是ImageView, 则Doodle会从ImageView中取出所在Activity作为host,<br/>
 若所在页面是Fragment, 或者into()对象不是ImageView, 且又需要生命周期管理的话，需主动调用host(Any)，传入host(所在页面）。
 
 # API 

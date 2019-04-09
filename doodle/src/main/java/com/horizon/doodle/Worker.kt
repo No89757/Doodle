@@ -137,11 +137,11 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
 
     companion object {
         private val cpuCount = Runtime.getRuntime().availableProcessors()
-        private val windowSize = Math.max(4, Math.min(cpuCount + 2, 8))
+        private val windowSize = Math.max(4, Math.min(cpuCount + 1, 6))
         private val loadingExecutor = LaneExecutor(PipeExecutor(windowSize))
         private val storageExecutor = PipeExecutor(1)
 
-        private fun storeResult(key: Long?, bitmap: Bitmap?) {
+        private fun storeResult(key: Long, bitmap: Bitmap) {
             storageExecutor.execute {
                 try {
                     Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND)

@@ -7,12 +7,8 @@ Doodle is an efficient image loader for Android.
 
 # Download
 ```gradle
-repositories {
-    jcenter()
-}
-
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.0.8'
+    implementation 'com.horizon.doodle:doodle:1.0.9'
 }
 ```
 

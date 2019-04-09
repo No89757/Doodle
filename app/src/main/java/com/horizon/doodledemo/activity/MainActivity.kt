@@ -1,13 +1,9 @@
 package com.horizon.doodledemo.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import com.horizon.doodle.Doodle
 import com.horizon.doodledemo.R
 import com.horizon.doodledemo.base.BaseActivity
-import com.horizon.task.IOTask
-import java.io.File
 
 
 class MainActivity : BaseActivity(), View.OnClickListener {
@@ -27,8 +23,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             R.id.test_image_btn -> startActivity(ImageDemoActivity::class.java)
             R.id.test_gif_btn -> startActivity(GifDemoActivity::class.java)
             R.id.rotate_image -> startActivity(RotateImageActivity::class.java)
-            else -> {
-            }
         }
     }
 }

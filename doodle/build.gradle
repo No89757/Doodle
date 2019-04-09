@@ -26,9 +26,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.60"
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.horizon.task:task:1.0.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
+    //implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.horizon.task:task:1.0.4'
+    //api project(path: ':task')
 }
 
 apply from: 'publish.gradle'

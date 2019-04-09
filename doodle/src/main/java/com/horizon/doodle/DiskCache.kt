@@ -47,35 +47,39 @@ internal object DiskCache {
      * @param key key of image
      * @return file path of image, null if not exist
      */
-    operator fun get(key: Long?): String? {
-        var value: JournalValue? = null
+    operator fun get(key: Long): String? {
+        var value: JournalValue?
         synchronized(this) {
-            value = journals[key]
-            if (value != null) {
-                value!!.accessTime = System.currentTimeMillis()
-                buffer.putLong(value!!.offset, value!!.accessTime)
+            value = journals[key]?.apply {
+                accessTime = System.currentTimeMillis()
+                buffer.putLong(offset, accessTime)
             }
         }
-        return if (value != null) {
-            keyToPath(key!!)
-        } else null
+        return if (value != null) keyToPath(key) else null
     }
 
-    fun put(key: Long?, bitmap: Bitmap?) {
-        if (bitmap == null || Config.diskCacheCapacity <= 0) {
+    fun put(key: Long, bitmap: Bitmap) {
+        if (Config.diskCacheCapacity <= 0) {
             return
         }
-        var value: JournalValue? = null
+        var value: JournalValue?
         synchronized(this) {
             value = journals[key]
         }
         if (value == null) {
             try {
-                val file = File(keyToPath(key!!))
-                if (Utils.makeFileIfNotExist(file)) {
-                    saveBitmap(file, bitmap)
+                val name = keyToPath(key)
+                // we save to temp file  and rename after saving,
+                // in case the process exits when saving the bitmap
+                val tempFile = File("$name.tmp")
+                if (Utils.makeFileIfNotExist(tempFile)) {
+                    saveBitmap(tempFile, bitmap)
+                    val fileLen = tempFile.length()
+                    if(!tempFile.renameTo(File(name))){
+                        return
+                    }
                     synchronized(this) {
-                        addJournal(key, file.length())
+                        addJournal(key, fileLen)
                         checkSize()
                     }
                 }
@@ -256,7 +260,6 @@ internal object DiskCache {
             } catch (e: NumberFormatException) {
                 LogProxy.e(TAG, e)
             }
-
         }
         return null
     }

@@ -164,9 +164,7 @@ internal object Decoder {
                 }
             }
         } finally {
-            if (options.inTempStorage != null) {
-                ByteArrayPool.recycleBasicArray(options.inTempStorage)
-            }
+            ByteArrayPool.recycleBasicArray(options.inTempStorage)
         }
 
         if (bitmap != null) {

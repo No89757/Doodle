@@ -15,8 +15,7 @@ internal object LruCache  {
 
     @Synchronized
     operator fun get(key: Long?): Bitmap? {
-        val wrapper = cache[key]
-        return wrapper?.bitmap
+        return cache[key]?.bitmap
     }
 
     @Synchronized
