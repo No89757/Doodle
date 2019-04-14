@@ -1,19 +1,20 @@
-# Doodle
+## Doodle
 [ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion) 
 
 [中文文档](README_CN.md)
 
 Doodle is an efficient image loader for Android.
 
-# Download
+## Download
 ```gradle
 dependencies {
     implementation 'com.horizon.doodle:doodle:1.0.9'
 }
 ```
 
-# How to Use？
-## initialize
+## How to Use？
+
+### initialize
 ```kotlin
 LogProxy.init(AppLogger)
 Doodle.init(context)
@@ -42,17 +43,8 @@ public abstract class BaseFragment extends Fragment {
 }
 ```
 
-```kotlin
-public class BaseDialog extends Dialog {
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        Doodle.notifyEvent(this, LifeEvent.DESTROY);
-    }
-}
-```
 
-## request
+### request
 ```kotlin
 Doodle.load(url)
         .host(fragment)
@@ -65,9 +57,9 @@ When make request, if the target is ImageView, Doodle will pick the activity to 
 But if the request happens in a Fragment, or target is not ImageView,
 it's necessary to call host() to make sure the request cancel when **notifyEvent(this, LifeEvent.DESTROY)** calling.
 
-# API 
+## API 
 
-## Doodle  (Entrance）
+### Doodle  (Entrance）
 method | Effect
 ---|---
 init(Context) : Config | Initialization
@@ -84,7 +76,7 @@ pauseRequest() | pause request
 resumeRequest() | resume request
 notifyEvent(Any, int) | notify lifecycle event of page(host)
 
-## Config （Global Configuration）
+### Config （Global Configuration）
 method | effect
 ---|---
 setUserAgent(String) | sey User-Agent header
@@ -97,7 +89,7 @@ setCompressFormat(Bitmap.CompressFormat) | PNG default
 setDefaultBitmapConfig(Bitmap.Config) | ARGB_8888 default
 setGifDecoder(GifDecoder) | set GifDecoder, Recommend [android-gif-drawable](https://github.com/koral--/android-gif-drawable)
 
-## Request （Single Request）
+### Request （Single Request）
 method | effect
 ---|---
 sourceKey(String) | set key of source, replace path, to build the key of request
@@ -133,5 +125,8 @@ into(SimpleTarget) | get bitmap by callback (no block)
 into(ImageView, Callback) | callback the bitmap in Callback, and return boolean in that method, if return true, Doodle will not setImage again.
 into(ImageView?) | load bitmap(or drawable) into ImageView
 
-# License
+## Link
+https://www.jianshu.com/p/3df395d8a6bc
+
+## License
 See the [LICENSE](LICENSE.md) file for license rights and limitations.

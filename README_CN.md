@@ -1,19 +1,21 @@
-# Doodle
+## Doodle
 [ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion)
 
 Doodle是一个轻量高效的图片加载框架。<br/>
 项目整体逻辑清晰，实现简洁，功能丰富，API友好……<br/>
 总而言之，就是简单、实用。
 
-# 下载
+## 下载
 ```gradle
 dependencies {
     implementation 'com.horizon.doodle:doodle:1.0.9'
 }
 ```
 
-# 如何使用
-## 初始化
+## 如何使用
+
+### 初始化
+
 ```kotlin
 LogProxy.init(AppLogger)
 Doodle.init(context)
@@ -42,17 +44,9 @@ public abstract class BaseFragment extends Fragment {
 }
 ```
 
-```kotlin
-public class BaseDialog extends Dialog {
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        LifecycleManager.notify(this, LifeEvent.DESTROY);
-    }
-}
-```
 
-## request
+### request
+
 ```kotlin
 Doodle.load(url)
         .host(fragment)
@@ -60,13 +54,14 @@ Doodle.load(url)
         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
         .into(bottomIv)
 ```
+
 请求图片时，如果into()的对象是ImageView, 则Doodle会从ImageView中取出所在Activity作为host,<br/>
 若所在页面是Fragment, 或者into()对象不是ImageView, 且又需要生命周期管理的话，需主动调用host(Any)，传入host(所在页面）。
 
-# API 
+## API 
 Doodle的API，关注Doodle, Config, Request三个类即可。
 
-## Doodle (框架入口）
+### Doodle (框架入口）
 方法 | 作用
 ---|---
 init(Context) : Config | 初始化，传入context, 返回全局配置
@@ -83,7 +78,7 @@ pauseRequest() | 暂停往任务队列中插入请求，对RecycleView快速滑�
 resumeRequest() | 恢复请求
 notifyEvent(Any, int) | 发送页面生命周期事件(通知页面销毁以取消请求等）
 
-## Config （全局配置）
+### Config （全局配置）
 方法 | 作用
 ---|---
 setUserAgent(String) | 设置User-Agent头，网络请求将自动填上此Header
@@ -96,7 +91,7 @@ setCompressFormat(Bitmap.CompressFormat) | 设置结果缓存的压缩格式， 
 setDefaultBitmapConfig(Bitmap.Config) | 设置默认的Bitmap.Config，默认为ARGB_8888
 setGifDecoder(GifDecoder) | 设置GIF解码器
 
-## Request （图片请求）
+### Request （图片请求）
 方法 | 作用
 ---|---
 sourceKey(String) | 设置数据源的key <br/> url默认情况下作为Request的key的一部分，有时候url有动态的参数，使得url频繁变化，从而无法缓存。此时可以设置sourceKey,提到path作为Request的key的一部分。
@@ -123,7 +118,7 @@ fadeIn(int) | 加载成功后显示淡入动画
 crossFate(int) | 这个动画效果是原图从透明度100到0， bitmap从0到100。<br/>当设置placeholder且内存缓存中没有指定图片时， placeholder为原图。<br/>如果没有设置placeholder,  效果和fadeIn差不多。<br/>需要注意的是，这个动画在原图和bitmap宽高不相等时，动画结束时图片会变形。<br/>因此，慎用crossFade。<br/>
 alwaysAnimation(Boolean) | 默认情况下仅在图片是从磁盘或者网络加载出来时才做动画，可通过此方法设置总是做动画
 asBitmap() | 当设置了GifDecoder时，默认情况下只要图片是GIF图片，则用GifDecoder解码。调用此方法后，只取Gif文件第一帧，返回bitmap
-host(Any) | 参见[Task](https://www.jianshu.com/p/8afb6cf64eec)的host
+host(Any) | 传入宿主(Activity/Fragment), 以观察其生命周期，参见[Task](https://github.com/No89757/Task)
 cacheInterceptor(CacheInterceptor) | (原图）缓存拦截器，可自定义单个请求的缓存路径，自己管理缓存，以免被LRU或者过时规则删除
 | | |
 preLoad() | 预加载
@@ -132,6 +127,8 @@ into(SimpleTarget) | 加载图片后通过SimpleTarget回调图片(加载是不�
 into(ImageView, Callback) | 加载图片图片到ImageView，同时通过Callback回调。如果Callback中返回true, 说明已经处理该bitmap了，则Doodle不会再setBitmap到ImageView了。
 into(ImageView?) | 加载图片图片到ImageView
 
+## 相关链接
+https://www.jianshu.com/p/3df395d8a6bc
 
-# License
+## License
 See the [LICENSE](LICENSE.md) file for license rights and limitations.
