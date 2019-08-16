@@ -36,9 +36,6 @@ Doodle.load(url)
         .into(bottomIv)
 ```
 
-We hava to notify event to make request cancel when Fragment destroy.
-It's not necessary to do this for Activity, for Doodle have done this when calling init(context)
-
 
 ### Global Config
 
@@ -56,15 +53,18 @@ Doodle.config()
 ### Life cycle
 
 Doodle implements a lifecycle mechanism.
-When the activity is destroyed, cancel the request refer to the activity;
-Dynamically adjust the priority when the activity switch visible/invisible.
+When the Activity is destroyed, cancel the request refer to the Activity/Fragemtn;
+Dynamically change the priority when the Activity/Fragment switch visible/invisible.
 
 If the current page is Activity and the target is ImageView, no more code is required.
 Because Doodle has implemented monitoring of Activity lifecycle,
-At the same time, if you haven't called host(), which is a method of Request, 
+If you haven't set host of Request( by calling host(Any), which is a method of Request), 
 Doodle will automatically extract the activity associated with the ImageView as the host.
 
-But for observering Fragment's life cycle, you need to call Doodle.notifyEvent() in callback of Fragment, like onDestroy().
+
+For observering Fragment's life cycle, you need to call Doodle.notifyEvent() in callback of Fragment, like onDestroy().
+Doodle haven't implemented observering life cycle of Fragment,
+for considering to inject two lines of code outside is more effective.
 
 ```kotlin
 public abstract class BaseFragment extends Fragment {
@@ -82,8 +82,7 @@ public abstract class BaseFragment extends Fragment {
 }
 ```
 
-And set the fragment to Request:
-
+And set the Fragment to Request:
 
 ```kotlin
 Doodle.load(url)
