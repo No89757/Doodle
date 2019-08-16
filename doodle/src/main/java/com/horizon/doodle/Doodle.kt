@@ -16,75 +16,21 @@
 
 package com.horizon.doodle
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
-import com.horizon.task.lifecycle.LifeEvent
 import com.horizon.task.lifecycle.LifecycleManager
 import java.io.File
 
-
-@SuppressLint("StaticFieldLeak")
+/**
+ * Entrance of the framework
+ */
 object Doodle {
-    internal lateinit var appContext: Context
-
-    private fun registerActivityLifeCycle(context: Context) {
-        if (context !is Application) {
-            return
-        }
-        context.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-            }
-
-            override fun onActivityStarted(activity: Activity) {
-            }
-
-            override fun onActivityResumed(activity: Activity) {
-                LifecycleManager.notify(activity, LifeEvent.SHOW)
-            }
-
-            override fun onActivityPaused(activity: Activity) {
-                LifecycleManager.notify(activity, LifeEvent.HIDE)
-            }
-
-            override fun onActivityStopped(activity: Activity) {
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-                LifecycleManager.notify(activity, LifeEvent.DESTROY)
-            }
-        })
-    }
-
     /**
-     * init Doodle input application onCreate
-     *
-     * @param context Application
-     * @param config  custom configuration
+     * get global config object
      */
     @JvmStatic
-    fun init(context: Context) : Config {
-        appContext = context as? Application ?: context.applicationContext
-        registerActivityLifeCycle(appContext)
-
+    fun config() : Config {
         return Config
-    }
-
-    @JvmStatic
-    fun trimMemory(level: Int) {
-        LruCache.trimMemory(level)
-    }
-
-    @JvmStatic
-    fun clearMemory() {
-        LruCache.clearMemory()
     }
 
     /**
@@ -155,11 +101,24 @@ object Doodle {
         Dispatcher.resume()
     }
 
+    @JvmStatic
+    fun trimMemory(level: Int) {
+        LruCache.trimMemory(level)
+    }
+
+    @JvmStatic
+    fun clearMemory() {
+        LruCache.clearMemory()
+    }
+
     /**
-     * notify holder destroy,
-     * when all holders of bitmap destroy, the bitmap may be reused.
+     * Notify [host] destroy.
      *
-     * @param host may be Activity, Fragment, or Dialog
+     * The [host] may be one of Activity, Fragment, or Dialog (which also name 'page'), refer to [Request.host].
+     * The [Worker] will auto cancel when page destroy if this method called in page's onDestroy()
+     *
+     * If the host is Activity, is not necessary to call this，
+     * cause Doodle will do this by [Utils.registerActivityLifeCycle]
      */
     @JvmStatic
     fun notifyEvent(host: Any, event: Int) {

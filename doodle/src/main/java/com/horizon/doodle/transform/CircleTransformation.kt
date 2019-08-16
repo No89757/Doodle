@@ -2,7 +2,7 @@ package com.horizon.doodle.transform
 
 import android.graphics.*
 
-class CircleTransformation constructor(private val diameter: Int = 0)  : Transformation {
+class CircleTransformation (private val diameter: Int = 0)  : Transformation {
     override fun transform(source: Bitmap): Bitmap? {
         if (diameter < 0) {
             return source

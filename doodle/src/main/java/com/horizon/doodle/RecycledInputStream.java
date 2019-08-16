@@ -21,7 +21,7 @@ class RecycledInputStream extends InputStream {
      */
     private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
 
-    protected volatile InputStream in;
+    private volatile InputStream in;
 
     private volatile byte buf[];
 

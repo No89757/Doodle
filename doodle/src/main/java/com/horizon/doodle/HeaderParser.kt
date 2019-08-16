@@ -8,7 +8,7 @@ import java.nio.ByteOrder
 
 
 /**
- * A class for parsing the exif orientation and other data from image header. <br></br>
+ * A class for parsing the exif orientation and other data from image header.
  *
  * Copy from Glide
  */
@@ -116,22 +116,22 @@ internal object HeaderParser {
      * `-1` if no exif segment is found.
      */
     @Throws(IOException::class)
-    private fun moveToExifSegmentAndGetLength(`in`: InputStream): Int {
+    private fun moveToExifSegmentAndGetLength(stream: InputStream): Int {
         while (true) {
-            val segmentId = `in`.read() and 0xFF
+            val segmentId = stream.read() and 0xFF
             if (segmentId != SEGMENT_START_ID) {
                 return -1
             }
 
-            val segmentType = `in`.read() and 0xFF
+            val segmentType = stream.read() and 0xFF
             if (segmentType == SEGMENT_SOS || segmentType == MARKER_EOI) {
                 return -1
             }
 
             // Segment length includes bytes for segment length.
-            val segmentLength = (`in`.read() shl 8 and 0xFF00 or (`in`.read() and 0xFF)) - 2
+            val segmentLength = (stream.read() shl 8 and 0xFF00 or (stream.read() and 0xFF)) - 2
             if (segmentType != EXIF_SEGMENT_TYPE) {
-                if (skip(`in`, segmentLength.toLong()) != segmentLength.toLong()) {
+                if (skip(stream, segmentLength.toLong()) != segmentLength.toLong()) {
                     return -1
                 }
             } else {
@@ -141,14 +141,14 @@ internal object HeaderParser {
     }
 
     @Throws(IOException::class)
-    private fun skip(`in`: InputStream, total: Long): Long {
+    private fun skip(stream: InputStream, total: Long): Long {
         if (total < 0) {
             return 0
         }
 
         var toSkip = total
         while (toSkip > 0) {
-            val skipped = `in`.skip(toSkip)
+            val skipped = stream.skip(toSkip)
             if (skipped > 0) {
                 toSkip -= skipped
             } else {
@@ -156,7 +156,7 @@ internal object HeaderParser {
                 // the stream. To differentiate between temporarily not having more data and
                 // having finished the stream, we read a single byte when we fail to skip any
                 // amount of data.
-                val testEofByte = `in`.read()
+                val testEofByte = stream.read()
                 if (testEofByte == -1) {
                     break
                 } else {

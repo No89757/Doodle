@@ -62,7 +62,7 @@ internal object Dispatcher {
 
         // id source is invalid, just callback and return
         if (TextUtils.isEmpty(request.path)) {
-            stall(request, imageView)
+            abort(request, imageView)
             return
         }
 
@@ -123,7 +123,7 @@ internal object Dispatcher {
         return false
     }
 
-    private fun stall(request: Request, imageView: ImageView?) {
+    private fun abort(request: Request, imageView: ImageView?) {
         if (request.simpleTarget != null) {
             request.simpleTarget!!.onComplete(null)
         } else if (imageView != null) {
@@ -222,7 +222,7 @@ internal object Dispatcher {
             imageView.startAnimation(request.animation)
         } else if (request.animationId != 0) {
             try {
-                val animation = AnimationUtils.loadAnimation(Doodle.appContext, request.animationId)
+                val animation = AnimationUtils.loadAnimation(Utils.context, request.animationId)
                 imageView.clearAnimation()
                 imageView.startAnimation(animation)
             } catch (e: Exception) {

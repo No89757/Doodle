@@ -2,31 +2,58 @@
 [ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion)
 
 Doodle是一个轻量高效的图片加载框架。<br/>
-项目整体逻辑清晰，实现简洁，功能丰富，API友好……<br/>
-总而言之，就是简单、实用。
+
+Doodle的API设计参考了Picasso和Glide，所以用过类似图片加载框架的朋友可以直接上手。
+相比于Picasso，Doodle的实现更加完备（缓存设计，生命周期，任务调度，GIF支持，解码方案等多方面，比Picasso考虑的细节更多）；
+相比于Glide，Doodle的实现更加轻量（方法数400+，包大小104K）。
+
 
 ## 下载
 ```gradle
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.0.9'
+    implementation 'com.horizon.doodle:doodle:1.1.0'
 }
 ```
 
 ## 如何使用
 
-### 初始化
+### 图片加载
+
+最简单的图片加载，只需设定图片路径和ImageView即可。
 
 ```kotlin
-LogProxy.init(AppLogger)
-Doodle.init(context)
+Doodle.load(url).into(bottomIv)
+```
+
+当然也可以设定更多的参数：
+
+```kotlin
+Doodle.load(url)
+        .placeholder(R.color.colorAccent)
+        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+        .into(bottomIv)
+```
+
+### 全局配置
+ Doodle有一套默认的配置，在Config类中，
+ 如果需要自己定义配置，可参考以下方法。
+
+```kotlin
+Doodle.config()
         .setDiskCacheCapacity(256L shl 20)
-        .setMemoryCacheCapacity(128L shl 20)
-        .setDefaultBitmapConfig(Bitmap.Config.ARGB_8888)
         .setGifDecoder(gifDecoder)
 ```
 
-为使请求可以在页面销毁时取消请求，或者在页面切换 可见/不可见 时动态调整优先级，需在BaseFragment发送生命周期事件。<br/>
-Activity不需要做这件事，因为在调用init(Context)时Doodle已经做了这件事。
+### 生命周期
+Doodle实现了生命周期机制。
+Activity销毁时，取消该页面的图片请求；
+在页面切换 可见/不可见 时动态调整优先级。
+
+如果所在页面是Activity, 并且target是ImageView, 则不需要额外地处理，
+因为Doodle内部实现了对Activity生命周期事件的监听，
+同时,如果没有主动调用Request的host()， Doodle会自动提取ImageView关联的activity作为host。
+
+如果需要实现对Fragment的监听，需要调用以下代码：
 
 ```kotlin
 public abstract class BaseFragment extends Fragment {
@@ -44,19 +71,14 @@ public abstract class BaseFragment extends Fragment {
 }
 ```
 
-
-### request
+如果需要在fragment销毁时取消任务，需要在请求时调用host传入fragment；
+如果没有传fragment,则Doodle会提取ImageView所在的Activity作为host(如前所述）。
 
 ```kotlin
 Doodle.load(url)
-        .host(fragment)
-        .placeholder(R.color.colorAccent)
-        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-        .into(bottomIv)
+		.host(fragment)
+		.into(bottomIv)
 ```
-
-请求图片时，如果into()的对象是ImageView, 则Doodle会从ImageView中取出所在Activity作为host,<br/>
-若所在页面是Fragment, 或者into()对象不是ImageView, 且又需要生命周期管理的话，需主动调用host(Any)，传入host(所在页面）。
 
 ## API 
 Doodle的API，关注Doodle, Config, Request三个类即可。
@@ -64,7 +86,7 @@ Doodle的API，关注Doodle, Config, Request三个类即可。
 ### Doodle (框架入口）
 方法 | 作用
 ---|---
-init(Context) : Config | 初始化，传入context, 返回全局配置
+config() : Config | 返回全局配置对象
 trimMemory(int) | 整理内存(LruCache)，传入ComponentCallbacks2的不同level有不同的策略
 clearMemory() | 移除LruCache中所有bitmap
 load(String): Request | 传入图片路径，返回Request
@@ -89,7 +111,7 @@ setSourceCacheCapacity(Long) | 设置原图缓存的容量
 setMemoryCacheCapacity(Long) | 设置内存缓存的容量，默认为maxMemory的1/6
 setCompressFormat(Bitmap.CompressFormat) | 设置结果缓存的压缩格式， 默认为PNG
 setDefaultBitmapConfig(Bitmap.Config) | 设置默认的Bitmap.Config，默认为ARGB_8888
-setGifDecoder(GifDecoder) | 设置GIF解码器
+setGifDecoder(GifDecoder) | 设置GIF解码器, 推荐使用 [android-gif-drawable](https://github.com/koral--/android-gif-drawable)
 
 ### Request （图片请求）
 方法 | 作用
@@ -119,7 +141,6 @@ crossFate(int) | 这个动画效果是原图从透明度100到0， bitmap从0到
 alwaysAnimation(Boolean) | 默认情况下仅在图片是从磁盘或者网络加载出来时才做动画，可通过此方法设置总是做动画
 asBitmap() | 当设置了GifDecoder时，默认情况下只要图片是GIF图片，则用GifDecoder解码。调用此方法后，只取Gif文件第一帧，返回bitmap
 host(Any) | 传入宿主(Activity/Fragment), 以观察其生命周期，参见[Task](https://github.com/No89757/Task)
-cacheInterceptor(CacheInterceptor) | (原图）缓存拦截器，可自定义单个请求的缓存路径，自己管理缓存，以免被LRU或者过时规则删除
 | | |
 preLoad() | 预加载
 get(int) : Bitmap? | 当前线程获取图片，加载时阻塞当前线程，可设定timeout时间(默认3s)，超时未完成则取消任务，返回null。

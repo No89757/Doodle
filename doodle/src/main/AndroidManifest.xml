@@ -1,1 +1,10 @@
-<manifest package="com.horizon.doodle" />
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.horizon.doodle" >
+    <application>
+        <provider
+            android:name=".DoodleContentProvider"
+            android:authorities="${applicationId}.doodle"
+            android:exported="false"/>
+    </application>
+</manifest>

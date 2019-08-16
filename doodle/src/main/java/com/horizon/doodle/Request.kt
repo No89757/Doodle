@@ -9,7 +9,6 @@ import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
-import com.horizon.doodle.interfaces.CacheInterceptor
 import com.horizon.doodle.interfaces.Callback
 import com.horizon.doodle.interfaces.SimpleTarget
 import com.horizon.doodle.transform.Transformation
@@ -43,7 +42,6 @@ class Request {
     internal var memoryCacheStrategy = MemoryCacheStrategy.LRU
     internal var onlyIfCached = false
     internal var diskCacheStrategy = DiskCacheStrategy.ALL
-    internal var cacheInterceptor: CacheInterceptor? = null
     internal var keepOriginal = false
     internal var placeholderResId = -1
     internal var placeholderDrawable: Drawable? = null
@@ -271,6 +269,10 @@ class Request {
     /**
      * set loading task's host
      *
+     * If host is Activity and target is ImageView,
+     * it's not necessary to call this,
+     * cause Doodle will pick the activity automatically by [Utils.pickActivity]
+     *
      * @param host may be one of Activity, Fragment or Dialog
      * @see com.horizon.task.UITask.host
      */
@@ -280,16 +282,9 @@ class Request {
     }
 
     /**
-     * You can take charge of cache by yourself in case OkHttp drop cache by LRU rule.
-     */
-    fun cacheInterceptor(interceptor: CacheInterceptor): Request {
-        this.cacheInterceptor = interceptor
-        return this
-    }
-
-    /**
-     * preload the bitmap. <br></br>
-     * assign sizes with [.override], otherwise it will load with original size.
+     * preload the bitmap.
+     *
+     * assign sizes with [override], otherwise it will load with original size.
      */
     fun preLoad() {
         fillSizeAndLoad(viewWidth, viewHeight)

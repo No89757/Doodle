@@ -7,6 +7,6 @@ class DemoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        AppInitManager.initApplication(this)
+        AppInitManager.initApplication()
     }
 }

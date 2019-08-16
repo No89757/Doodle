@@ -8,7 +8,7 @@ interface Transformation {
 
     /**
      * @return identify of this transformation, part of request key,
-     * suggest to be "constance string" or "constance string + final parameter".
+     * suggest to be "constance string" or "constance string + parameter".
      */
     fun key(): String
 }

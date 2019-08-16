@@ -2,7 +2,6 @@ package com.horizon.doodle
 
 import com.horizon.task.base.LogProxy
 import okhttp3.Cache
-import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.ByteString
@@ -11,10 +10,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
-/**
- * Http Client, need to init Context when app start,
- * to set up the cache path.
- */
 internal object Downloader  {
     private const val TAG = "Downloader"
 
@@ -29,7 +24,7 @@ internal object Downloader  {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
                 .cache(Cache(File(cacheDirPath), maxSize))
-        if (!agent.isEmpty()) {
+        if (agent.isNotEmpty()) {
             builder.addNetworkInterceptor { chain ->
                 chain.proceed(chain.request().newBuilder().header("User-Agent", agent).build())
             }

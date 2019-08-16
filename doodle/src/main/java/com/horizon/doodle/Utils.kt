@@ -1,16 +1,20 @@
 package com.horizon.doodle
 
 import android.app.Activity
+import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.os.Build
+import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import com.horizon.task.base.LogProxy
+import com.horizon.task.lifecycle.LifeEvent
+import com.horizon.task.lifecycle.LifecycleManager
 import java.io.*
 
 internal object Utils {
@@ -20,13 +24,50 @@ internal object Utils {
     private const val M = (1 shl 20).toLong()
     private const val G = (1 shl 30).toLong()
 
+    internal val context: Context by lazy {
+        val ctx = DoodleContentProvider.ctx.applicationContext
+        registerActivityLifeCycle(ctx)
+        ctx
+    }
+
+    private fun registerActivityLifeCycle(context: Context) {
+        if (context !is Application) {
+            return
+        }
+        context.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+                LifecycleManager.notify(activity, LifeEvent.SHOW)
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+                LifecycleManager.notify(activity, LifeEvent.HIDE)
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+                LifecycleManager.notify(activity, LifeEvent.DESTROY)
+            }
+        })
+    }
+
     internal val displayDimens: Point by lazy {
         fetchDimens()
     }
 
     val cacheDir: String by lazy {
-        Doodle.appContext.cacheDir?.path
-                ?: ("/data"+"/"+"data/" + Doodle.appContext.packageName + "/cache")
+        Utils.context.cacheDir?.path
+                ?: ("/data/"+"data/" + Utils.context.packageName + "/cache")
     }
 
     fun formatSize(size: Long): String {
@@ -40,7 +81,7 @@ internal object Utils {
 
     private fun fetchDimens(): Point {
         try {
-            val windowManager = Doodle.appContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+            val windowManager = Utils.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
             if (windowManager != null) {
                 val point = Point()
                 windowManager.defaultDisplay.getSize(point)
@@ -99,7 +140,7 @@ internal object Utils {
     fun toUriPath(resID: Int): String {
         if (resID != 0) {
             try {
-                val resources = Doodle.appContext.resources
+                val resources = Utils.context.resources
                 return (ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
                         + resources.getResourcePackageName(resID) + "/"
                         + resources.getResourceTypeName(resID) + "/"

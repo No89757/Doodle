@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PainterDemo</string>
+    <string name="app_name">DoodleDemo</string>
     <string name="test_image">test image</string>
     <string name="test_gif">test gif</string>
     <string name="rotate_image">rotate image</string>

@@ -145,12 +145,12 @@ internal object ByteArrayPool {
                         throw IOException("Required buffer too large")
                     }
                     val oldBuffer = buffer
-                    buffer = Arrays.copyOf(buffer, bufLen shl 1)
+                    buffer = buffer.copyOf(bufLen shl 1)
                     bufLen = buffer.size
                     recycleArray(oldBuffer)
                 }
             }
-            return Arrays.copyOf(buffer, off)
+            return buffer.copyOf(off)
         } finally {
             recycleArray(buffer)
             if (!stream.markSupported()) {

@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -26,11 +25,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
-    //implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    implementation 'com.horizon.task:task:1.0.4'
-    //api project(path: ':task')
+    api 'com.horizon.task:task:1.0.4'
 }
 
-apply from: 'publish.gradle'
+// apply from: 'publish.gradle'

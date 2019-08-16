@@ -15,7 +15,7 @@ object DiskCacheStrategy {
      */
     const val SOURCE = 1
     /**
-     * Saves result to cache after decode and all transformations .
+     * Saves result to cache after decode and apply all transformations .
      */
     const val RESULT = 2
     /**

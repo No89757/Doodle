@@ -178,26 +178,11 @@ internal abstract class Source : Closeable {
             }
         }
 
-        /**
-         * Try cache interceptor first
-         */
-        private fun checkCache(request: Request) : Source? {
-            val url = request.path
-            if (request.cacheInterceptor != null) {
-                val cacheFile = request.cacheInterceptor!!.cachePath(url)
-                if (cacheFile != null && (cacheFile.exists()
-                                || Utils.copyFile(Downloader.downloadOnly(url), cacheFile))) {
-                    return valueOf(cacheFile)
-                }
-            }
-            return null
-        }
-
         @Throws(IOException::class)
         fun parse(request: Request): Source {
             val path = request.path
             return when {
-                path.startsWith("http") -> checkCache(request) ?: let {
+                path.startsWith("http") -> {
                     val builder = okhttp3.Request.Builder().url(path)
                     if (request.diskCacheStrategy and DiskCacheStrategy.SOURCE == 0) {
                         builder.cacheControl(CacheControl.Builder().noCache().noStore().build())
@@ -206,9 +191,9 @@ internal abstract class Source : Closeable {
                     }
                     valueOf(Downloader.getSource(builder.build()))
                 }
-                path.startsWith(ASSET_PREFIX) -> valueOf(Doodle.appContext.assets.open(path.substring(ASSET_PREFIX_LENGTH)))
+                path.startsWith(ASSET_PREFIX) -> valueOf(Utils.context.assets.open(path.substring(ASSET_PREFIX_LENGTH)))
                 path.startsWith(FILE_PREFIX) -> valueOf(File(path.substring(FILE_PREFIX_LENGTH)))
-                else -> valueOf(Doodle.appContext.contentResolver.openInputStream((request.uri ?: Uri.parse(path))))
+                else -> valueOf(Utils.context.contentResolver.openInputStream((request.uri ?: Uri.parse(path))))
             }
         }
     } // end of companion

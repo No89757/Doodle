@@ -17,6 +17,9 @@ class RotateImageActivity : BaseActivity() {
         val topIv = findViewById<ImageView>(R.id.top_iv)
         val bottomIv = findViewById<ImageView>(R.id.bottom_iv)
 
+        // About exif Orientation
+        // https://blog.csdn.net/netdxy/article/details/49108489
+
         val rotateUrl = "http://7xkt2b.com1.z0.glb.clouddn.com/FgXvI-wvFydLlooOOVSYPyCCfWzA"
         val removedRotateExif = "http://7xkt2b.com1.z0.glb.clouddn.com/FgXvI-wvFydLlooOOVSYPyCCfWzA?imageMogr2/strip"
         Doodle.load(rotateUrl)

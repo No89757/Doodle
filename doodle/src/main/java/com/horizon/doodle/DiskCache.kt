@@ -1,6 +1,7 @@
 package com.horizon.doodle
 
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import com.horizon.task.base.LogProxy
 import java.io.File
@@ -11,6 +12,7 @@ import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.util.*
 
+@SuppressLint("UseSparseArrays")
 internal object DiskCache {
     private const val TAG = "DiskCache"
     private const val JOURNAL_NAME = "journal"
@@ -31,6 +33,8 @@ internal object DiskCache {
             val c = path[path.length - 1]
             if (c == '/') path else "$path/"
         }
+        //  HashMap is faster than LongSparseArray
+        //  when cache files grow up to more than a thousand
         HashMap<Long, JournalValue>().apply {
             try {
                 readJournal(this)

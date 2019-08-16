@@ -6,6 +6,7 @@ import android.os.Process
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
+import com.horizon.doodle.interfaces.GifDecoder
 import com.horizon.task.UITask
 import com.horizon.task.base.LogProxy
 import com.horizon.task.executor.LaneExecutor
@@ -67,9 +68,10 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
                 fromDiskCache = !TextUtils.isEmpty(filePath)
                 source = if (fromDiskCache) Source.valueOf(File(filePath!!)) else Source.parse(request)
 
-                if (!fromDiskCache && request.gifPriority && Config.gifDecoder != null
+                val gifDecoder = Config.gifDecoder
+                if (!fromDiskCache && request.gifPriority && gifDecoder != null
                         && HeaderParser.isGif(source.magic)) {
-                    return Config.gifDecoder!!.decode(source.data)
+                    return gifDecoder.decode(source.data)
                 }
 
                 bitmap = Decoder.decode(source, request, fromDiskCache)

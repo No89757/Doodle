@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'org.jetbrains.dokka-android'
 
 def GROUP = 'com.horizon.doodle'
-def VERSION = '1.0.9'
+def VERSION = '1.1.0'
 
 group = GROUP
 version = VERSION

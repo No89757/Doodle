@@ -2,9 +2,6 @@ package com.horizon.doodle
 
 import android.content.ComponentCallbacks2
 import android.graphics.Bitmap
-import android.util.Log
-import com.horizon.task.base.LogProxy
-import java.text.DecimalFormat
 import java.util.*
 
 
@@ -19,20 +16,6 @@ internal object LruCache  {
     }
 
     @Synchronized
-    fun clearMemory() {
-        trimToSize(0)
-    }
-
-    @Synchronized
-    fun trimMemory(level: Int) {
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
-            trimToSize(0)
-        } else if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND || level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
-            trimToSize(Math.max(sum shr 1, minSize))
-        }
-    }
-
-    @Synchronized
     fun put(key: Long, bitmap: Bitmap?) {
         val capacity = Config.memoryCacheCapacity
         if (bitmap == null || capacity <= 0) {
@@ -43,16 +26,22 @@ internal object LruCache  {
             wrapper = BitmapWrapper(bitmap)
             cache[key] = wrapper
             sum += wrapper.bytesCount.toLong()
-            if (LogProxy.isDebug) {
-                val df = DecimalFormat("0.00")
-                Log.d("LruCache", "size:" + Utils.formatSize(wrapper.bytesCount.toLong())
-                        + "  bitmap:" + bitmap.width + "x" + bitmap.height
-                        + "  state:" + df.format((100f * sum / capacity).toDouble()) + "%"
-                        + "  count:" + cache.size)
-            }
             if (sum > capacity) {
                 trimToSize(capacity * 9 / 10)
             }
+        }
+    }
+    @Synchronized
+    fun clearMemory() {
+        trimToSize(0)
+    }
+
+    @Synchronized
+    fun trimMemory(level: Int) {
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
+            trimToSize(0)
+        } else if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND || level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
+            trimToSize(Math.max(sum shr 1, minSize))
         }
     }
 
