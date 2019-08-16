@@ -51,7 +51,7 @@ Activity销毁时，取消该页面的图片请求；
 
 如果所在页面是Activity, 并且target是ImageView, 则不需要额外地处理，
 因为Doodle内部实现了对Activity生命周期事件的监听，
-同时,如果没有主动调用Request的host()， Doodle会自动提取ImageView关联的activity作为host。
+同时,如果没有主动调用Request的host()， Doodle会自动提取ImageView关联的Activity作为host。
 
 如果需要实现对Fragment的监听，需要调用以下代码：
 
@@ -71,8 +71,12 @@ public abstract class BaseFragment extends Fragment {
 }
 ```
 
-如果需要在fragment销毁时取消任务，需要在请求时调用host传入fragment；
-如果没有传fragment,则Doodle会提取ImageView所在的Activity作为host(如前所述）。
+考虑到实现对Fragment的事件监听需要额外依赖support包，以及在外部注入两行代码更加高效，
+Doodle没有在框架中实现对Fragment的的事件监听，而是提供方法给外部。
+
+
+如果需要在Fragment销毁时取消任务，需要在请求时调用host传入Fragment；
+如果没有传Fragment,则Doodle会提取ImageView所在的Activity作为host(如前所述）。
 
 ```kotlin
 Doodle.load(url)
