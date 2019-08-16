@@ -96,7 +96,7 @@ Doodle.load(url)
 ### Doodle  (Entrance）
 method | Effect
 ---|---
-init() : Config | return global config object
+config() : Config | return global config object
 trimMemory(int) | trim memory of LruCache
 clearMemory() | remove all bitmap from LruCache
 load(String): Request | get Request by path
