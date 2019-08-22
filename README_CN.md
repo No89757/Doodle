@@ -3,8 +3,8 @@
 
 Doodle是一个轻量高效的图片加载框架。<br/>
 
-Doodle的API设计参考了Picasso和Glide，所以用过类似图片加载框架的朋友可以直接上手。
-相比于Picasso，Doodle的实现更加完备（缓存设计，生命周期，任务调度，GIF支持，解码方案等多方面，比Picasso考虑的细节更多）；
+Doodle的API设计参考了Picasso和Glide，所以用过类似图片加载框架的朋友可以直接上手。<br/>
+相比于Picasso，Doodle的实现更加完备（缓存设计，生命周期，任务调度，GIF支持，解码方案等多方面，比Picasso考虑的细节更多）；<br/>
 相比于Glide，Doodle的实现更加轻量（方法数400+，包大小104K）。
 
 
@@ -45,12 +45,12 @@ Doodle.config()
 ```
 
 ### 生命周期
-Doodle实现了生命周期机制。
-Activity销毁时，取消该页面的图片请求；
+Doodle实现了生命周期机制。<br/>
+Activity销毁时，取消该页面的图片请求；<br/>
 在页面切换 可见/不可见 时动态调整优先级。
 
-如果所在页面是Activity, 并且target是ImageView, 则不需要额外地处理，
-因为Doodle内部实现了对Activity生命周期事件的监听，
+如果所在页面是Activity, 并且target是ImageView, 则不需要额外地处理，<br/>
+因为Doodle内部实现了对Activity生命周期事件的监听，<br/>
 同时,如果没有主动调用Request的host()， Doodle会自动提取ImageView关联的Activity作为host。
 
 如果需要实现对Fragment的监听，需要调用以下代码：
@@ -71,11 +71,11 @@ public abstract class BaseFragment extends Fragment {
 }
 ```
 
-考虑到实现对Fragment的事件监听需要额外依赖support包，以及在外部注入两行代码更加高效，
+考虑到实现对Fragment的事件监听需要额外依赖support包，以及在外部注入两行代码更加高效，<br/>
 Doodle没有在框架中实现对Fragment的的事件监听，而是提供方法给外部。
 
 
-如果需要在Fragment销毁时取消任务，需要在请求时调用host传入Fragment；
+如果需要在Fragment销毁时取消任务，需要在请求时调用host传入Fragment；<br/>
 如果没有传Fragment,则Doodle会提取ImageView所在的Activity作为host(如前所述）。
 
 ```kotlin
