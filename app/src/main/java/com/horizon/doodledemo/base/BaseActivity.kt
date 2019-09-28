@@ -1,8 +1,8 @@
 package com.horizon.doodledemo.base
 
 import android.content.Intent
-import android.support.annotation.UiThread
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.UiThread
+import androidx.appcompat.app.AppCompatActivity
 
 @UiThread
 abstract class BaseActivity : AppCompatActivity() {

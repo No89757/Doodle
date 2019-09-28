@@ -12,6 +12,14 @@ import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.util.*
 
+/**
+ * Manager of [DiskCacheStrategy.RESULT] file and journal.
+ *
+ * Journal pattern in file like [hash1|accessTime1|hash2|accessTime2|……].
+ * If accessTime is zero, means that file has been deleted.
+ * With the journal, we can achieve LRU strategy and delete files out of [Config.diskCacheMaxAge].
+ * And we can update accessTime randomly for we know the offset of every [JournalValue]
+ */
 @SuppressLint("UseSparseArrays")
 internal object DiskCache {
     private const val TAG = "DiskCache"
@@ -34,7 +42,7 @@ internal object DiskCache {
             if (c == '/') path else "$path/"
         }
         //  HashMap is faster than LongSparseArray
-        //  when cache files grow up to more than a thousand
+        //  when cache files grow up to more than a thousand,
         HashMap<Long, JournalValue>().apply {
             try {
                 readJournal(this)
@@ -75,11 +83,11 @@ internal object DiskCache {
                 val name = keyToPath(key)
                 // we save to temp file  and rename after saving,
                 // in case the process exits when saving the bitmap
-                val tempFile = File("$name.tmp")
-                if (Utils.makeFileIfNotExist(tempFile)) {
-                    saveBitmap(tempFile, bitmap)
-                    val fileLen = tempFile.length()
-                    if(!tempFile.renameTo(File(name))){
+                val tmpFile = File("$name.tmp")
+                if (Utils.makeFileIfNotExist(tmpFile)) {
+                    saveBitmap(tmpFile, bitmap)
+                    val fileLen = tmpFile.length()
+                    if (!tmpFile.renameTo(File(name))) {
                         return
                     }
                     synchronized(this) {
@@ -137,24 +145,31 @@ internal object DiskCache {
                 }
             }
 
-            val newLen = alignLength(((count - i) * 16).toLong())
-            if (newLen < buffer.capacity()) {
-                buffer.force()
-                channel.truncate(newLen)
-                buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, newLen)
-            }
-            buffer.clear()
-            while (i < count) {
-                val value = journalList[i++]
-                buffer.putLong(value.key)
-                value.offset = buffer.position()
-                buffer.putLong(value.accessTime)
-            }
-            journalEnd = buffer.position()
+            alignFile(journalList, i)
+        }
+    }
 
-            while (buffer.hasRemaining()) {
-                buffer.putLong(0L)
-            }
+    private fun alignFile(journalList: ArrayList<JournalValue>, start: Int) {
+        val count = journalList.size
+        var i = start
+
+        val newLen = alignLength(((count - i) * 16).toLong())
+        if (newLen < buffer.capacity()) {
+            buffer.force()
+            channel.truncate(newLen)
+            buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, newLen)
+        }
+        buffer.clear()
+        while (i < count) {
+            val value = journalList[i++]
+            buffer.putLong(value.key)
+            value.offset = buffer.position()
+            buffer.putLong(value.accessTime)
+        }
+        journalEnd = buffer.position()
+
+        while (buffer.hasRemaining()) {
+            buffer.putLong(0L)
         }
     }
 
@@ -204,6 +219,7 @@ internal object DiskCache {
     private fun readJournal(map: HashMap<Long, JournalValue>) {
         val journalFile = File(cachePath + JOURNAL_NAME)
         if (Utils.makeFileIfNotExist(journalFile)) {
+            var invalidCount = 0
             val accessFile = RandomAccessFile(journalFile, "rw")
             val length = alignLength(accessFile.length())
             channel = accessFile.channel
@@ -218,11 +234,18 @@ internal object DiskCache {
                 val accessTime = buffer.long
                 if (accessTime > 0) {
                     map[key] = JournalValue(key, accessTime, 0, buffer.position() - 8)
+                } else {
+                    invalidCount++
                 }
             }
 
             if (buffer.position() == buffer.capacity()) {
                 journalEnd = buffer.position()
+            }
+
+            if (invalidCount * 16 >= PAGE_SIZE) {
+                // make gc for journal
+                alignFile(ArrayList(map.values), 0)
             }
         }
     }
@@ -279,12 +302,7 @@ internal object DiskCache {
             internal var offset: Int) : Comparable<JournalValue> {
 
         override fun compareTo(other: JournalValue): Int {
-            if (accessTime < other.accessTime) {
-                return -1
-            } else if (accessTime > other.accessTime) {
-                return 1
-            }
-            return 0
+            return accessTime.compareTo(other.accessTime)
         }
     }
 }

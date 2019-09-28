@@ -2,9 +2,7 @@ package com.horizon.doodledemo.activity
 
 import android.os.Bundle
 import android.widget.ImageView
-
 import com.horizon.doodle.Doodle
-import com.horizon.doodle.transform.BlurTransformation
 import com.horizon.doodledemo.R
 import com.horizon.doodledemo.base.BaseActivity
 
@@ -23,6 +21,7 @@ class ImageDemoActivity : BaseActivity() {
 //        Doodle.load(R.raw.lenna)
 //                .transform(BlurTransformation())
 //                .into(testIv)
+
         val path = "file:///android_asset/lenna.jpg"
         Doodle.load(path).into(testIv)
     }

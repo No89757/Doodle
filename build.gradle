@@ -12,9 +12,10 @@ buildscript {
         // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
 
         // dependencies for publish
-        //classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.17"
-        // classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        //classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
+
+//        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.17"
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+//        classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
 
 
 

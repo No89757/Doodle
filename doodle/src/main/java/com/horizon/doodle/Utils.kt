@@ -67,7 +67,7 @@ internal object Utils {
 
     val cacheDir: String by lazy {
         Utils.context.cacheDir?.path
-                ?: ("/data/"+"data/" + Utils.context.packageName + "/cache")
+                ?: ("/data/" + "data/" + Utils.context.packageName + "/cache")
     }
 
     fun formatSize(size: Long): String {
@@ -211,22 +211,29 @@ internal object Utils {
 
     @Throws(IOException::class)
     fun copyFile(src: File?, des: File): Boolean {
-        if (src == null || !src.isFile || !makeFileIfNotExist(des)) {
+        if (src == null) {
             return false
         }
-        val inStream = FileInputStream(src)
+        return streamToFile(FileInputStream(src), des)
+    }
+
+    @Throws(IOException::class)
+    fun streamToFile(inputStream : InputStream?, des: File): Boolean{
+        if(inputStream == null || !makeFileIfNotExist(des)){
+            return false
+        }
+        val buffer = ByteArrayPool.basicArray
         val out = FileOutputStream(des)
-        val buffer = ByteArray(4096)
-        var count: Int
         try {
             while (true) {
-                count = inStream.read(buffer)
+                val count = inputStream.read(buffer)
                 if (count <= 0) break
                 out.write(buffer, 0, count)
             }
-        } finally {
-            Utils.closeQuietly(inStream)
-            Utils.closeQuietly(out)
+        }finally {
+            ByteArrayPool.recycleBasicArray(buffer)
+            closeQuietly(inputStream)
+            closeQuietly(out)
         }
         return true
     }

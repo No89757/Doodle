@@ -6,7 +6,6 @@ import android.os.Process
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
-import com.horizon.doodle.interfaces.GifDecoder
 import com.horizon.task.UITask
 import com.horizon.task.base.LogProxy
 import com.horizon.task.executor.LaneExecutor

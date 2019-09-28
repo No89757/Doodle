@@ -11,7 +11,7 @@ Doodle的API设计参考了Picasso和Glide，所以用过类似图片加载框�
 ## 下载
 ```gradle
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.1.0'
+    implementation 'com.horizon.doodle:doodle:1.1.2'
 }
 ```
 
@@ -145,6 +145,7 @@ crossFate(int) | 这个动画效果是原图从透明度100到0， bitmap从0到
 alwaysAnimation(Boolean) | 默认情况下仅在图片是从磁盘或者网络加载出来时才做动画，可通过此方法设置总是做动画
 asBitmap() | 当设置了GifDecoder时，默认情况下只要图片是GIF图片，则用GifDecoder解码。调用此方法后，只取Gif文件第一帧，返回bitmap
 host(Any) | 传入宿主(Activity/Fragment), 以观察其生命周期，参见[Task](https://github.com/No89757/Task)
+cacheInterceptor(CacheInterceptor) | 用于缓存原图到指定目录
 | | |
 preLoad() | 预加载
 get(int) : Bitmap? | 当前线程获取图片，加载时阻塞当前线程，可设定timeout时间(默认3s)，超时未完成则取消任务，返回null。

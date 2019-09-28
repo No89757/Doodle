@@ -3,14 +3,14 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'org.jetbrains.dokka-android'
 
 def GROUP = 'com.horizon.doodle'
-def VERSION = '1.1.0'
+def VERSION = '1.1.2'
 
 group = GROUP
 version = VERSION
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    getArchiveClassifier().set('sources')
 }
 
 dokka{
@@ -20,7 +20,7 @@ dokka{
 }
 
 task javadocJar(type: Jar, dependsOn: dokka) {
-    classifier = 'javadoc'
+    getArchiveClassifier().set('javadoc')
     from dokka.outputDirectory
 }
 

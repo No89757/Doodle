@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
+import com.horizon.doodle.interfaces.CacheInterceptor
 import com.horizon.doodle.interfaces.Callback
 import com.horizon.doodle.interfaces.SimpleTarget
 import com.horizon.doodle.transform.Transformation
@@ -42,6 +43,7 @@ class Request {
     internal var memoryCacheStrategy = MemoryCacheStrategy.LRU
     internal var onlyIfCached = false
     internal var diskCacheStrategy = DiskCacheStrategy.ALL
+    internal var cacheInterceptor: CacheInterceptor? = null
     internal var keepOriginal = false
     internal var placeholderResId = -1
     internal var placeholderDrawable: Drawable? = null
@@ -144,7 +146,7 @@ class Request {
      * @see diskCacheStrategy
      */
     fun noCache(): Request {
-        this.memoryCacheStrategy = MemoryCacheStrategy.LRU
+        this.memoryCacheStrategy = MemoryCacheStrategy.NONE
         this.diskCacheStrategy = DiskCacheStrategy.NONE
         return this
     }
@@ -278,6 +280,14 @@ class Request {
      */
     fun host(host: Any?): Request {
         this.hostHash = System.identityHashCode(host)
+        return this
+    }
+
+    /**
+     * You can use CacheInterceptor to cache source file to your own directories.
+     */
+    fun cacheInterceptor(interceptor: CacheInterceptor): Request {
+        this.cacheInterceptor = interceptor
         return this
     }
 

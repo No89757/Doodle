@@ -18,8 +18,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        val id = v.id
-        when (id) {
+        when (v.id) {
             R.id.test_image_btn -> startActivity(ImageDemoActivity::class.java)
             R.id.test_gif_btn -> startActivity(GifDemoActivity::class.java)
             R.id.rotate_image -> startActivity(RotateImageActivity::class.java)

@@ -13,7 +13,7 @@ Compared to Glide, Doodle's implementation is more lightweight (400+ methods, 10
 ## Download
 ```gradle
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.1.0'
+    implementation 'com.horizon.doodle:doodle:1.1.2'
 }
 ```
 
@@ -150,7 +150,8 @@ fadeIn(int) | set fade in animation, default duration is 300ms
 crossFate(int) | set cross fade animation, default duration is 300ms
 alwaysAnimation(Boolean) | only do animation if bitmap is not from memory cache in default case, always do it when calling this.
 asBitmap() | not matter source is gif or other format, just decode bitmap 
-host(Any) | bind host(page) to request, when page destroy, request cancel. 
+host(Any) | bind host(page) to request, when page destroy, request cancel.
+cacheInterceptor(CacheInterceptor) | to cache source file to your own directories.
 | | |
 preLoad() | |
 get(get) : Bitmap? | get bitmap in current thread (block util get result or failed)
