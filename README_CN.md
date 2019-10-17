@@ -35,8 +35,8 @@ Doodle.load(url)
 ```
 
 ### 全局配置
- Doodle有一套默认的配置，在Config类中，
- 如果需要自己定义配置，可参考以下方法。
+Doodle有一套默认的配置(在Config类中)。<br/>
+如果需要自己定义配置，可参考以下方法。
 
 ```kotlin
 Doodle.config()
