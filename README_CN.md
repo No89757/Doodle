@@ -11,7 +11,7 @@ Doodle的API设计参考了Picasso和Glide，所以用过类似图片加载框�
 ## 下载
 ```gradle
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.1.2'
+    implementation 'com.horizon.doodle:doodle:1.1.3'
 }
 ```
 

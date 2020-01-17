@@ -13,7 +13,7 @@ Compared to Glide, Doodle's implementation is more lightweight (400+ methods, 10
 ## Download
 ```gradle
 dependencies {
-    implementation 'com.horizon.doodle:doodle:1.1.2'
+    implementation 'com.horizon.doodle:doodle:1.1.3'
 }
 ```
 
