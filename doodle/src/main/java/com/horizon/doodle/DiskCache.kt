@@ -3,7 +3,7 @@ package com.horizon.doodle
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import com.horizon.doodle.task.LogProxy
+import com.horizon.doodle.worker.LogProxy
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

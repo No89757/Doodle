@@ -6,11 +6,11 @@ import android.os.Process
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
-import com.horizon.doodle.task.TagExecutor
-import com.horizon.doodle.task.LogProxy
-import com.horizon.doodle.task.PipeExecutor
-import com.horizon.doodle.task.PriorityExecutor
-import com.horizon.doodle.task.UITask
+import com.horizon.doodle.worker.TagExecutor
+import com.horizon.doodle.worker.LogProxy
+import com.horizon.doodle.worker.PipeExecutor
+import com.horizon.doodle.worker.PriorityExecutor
+import com.horizon.doodle.worker.UITask
 import java.io.File
 import java.io.InterruptedIOException
 import java.lang.ref.WeakReference

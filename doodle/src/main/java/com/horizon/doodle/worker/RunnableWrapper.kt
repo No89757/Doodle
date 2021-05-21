@@ -1,4 +1,4 @@
-package com.horizon.doodle.task
+package com.horizon.doodle.worker
 
 @Suppress("EqualsOrHashCode")
 internal class RunnableWrapper constructor(

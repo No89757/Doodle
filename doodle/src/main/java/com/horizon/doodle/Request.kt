@@ -12,7 +12,7 @@ import android.widget.ImageView
 import com.horizon.doodle.interfaces.CacheInterceptor
 import com.horizon.doodle.interfaces.Callback
 import com.horizon.doodle.interfaces.SimpleTarget
-import com.horizon.doodle.task.Priority
+import com.horizon.doodle.worker.Priority
 import com.horizon.doodle.transform.Transformation
 import java.lang.ref.WeakReference
 import java.util.*

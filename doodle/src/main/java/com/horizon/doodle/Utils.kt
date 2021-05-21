@@ -12,9 +12,9 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
-import com.horizon.doodle.task.LogProxy
-import com.horizon.doodle.task.lifecycle.LifeEvent
-import com.horizon.doodle.task.lifecycle.LifecycleManager
+import com.horizon.doodle.worker.LogProxy
+import com.horizon.doodle.worker.lifecycle.LifeEvent
+import com.horizon.doodle.worker.lifecycle.LifecycleManager
 import java.io.*
 
 internal object Utils {

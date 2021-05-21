@@ -1,7 +1,7 @@
 package com.horizon.doodledemo.application
 
 import android.util.Log
-import com.horizon.doodle.task.ILogger
+import com.horizon.doodle.worker.ILogger
 
 import com.horizon.doodledemo.BuildConfig
 

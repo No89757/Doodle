@@ -3,7 +3,7 @@ package com.horizon.doodledemo.application
 import android.graphics.drawable.Drawable
 import com.horizon.doodle.Doodle
 import com.horizon.doodle.interfaces.GifDecoder
-import com.horizon.doodle.task.LogProxy
+import com.horizon.doodle.worker.LogProxy
 import pl.droidsonroids.gif.GifDrawable
 
 

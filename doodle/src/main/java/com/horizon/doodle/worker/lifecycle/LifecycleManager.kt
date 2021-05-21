@@ -1,4 +1,4 @@
-package com.horizon.doodle.task.lifecycle
+package com.horizon.doodle.worker.lifecycle
 
 import android.util.SparseArray
 

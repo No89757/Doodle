@@ -4,7 +4,7 @@ Doodle是一个轻量高效的图片加载框架。<br/>
 
 Doodle的API设计参考了Picasso和Glide，所以用过类似图片加载框架的朋友可以直接上手。<br/>
 相比于Picasso，Doodle的实现更加完备（缓存设计，生命周期，任务调度，GIF支持，解码方案等多方面，比Picasso考虑的细节更多）；<br/>
-相比于Glide，Doodle的实现更加轻量（方法数400+，包大小104K）。
+相比于Glide，Doodle的实现更加轻量。
 
 
 ## 下载
@@ -143,7 +143,7 @@ fadeIn(int) | 加载成功后显示淡入动画
 crossFate(int) | 这个动画效果是原图从透明度100到0， bitmap从0到100。<br/>当设置placeholder且内存缓存中没有指定图片时， placeholder为原图。<br/>如果没有设置placeholder,  效果和fadeIn差不多。<br/>需要注意的是，这个动画在原图和bitmap宽高不相等时，动画结束时图片会变形。<br/>因此，慎用crossFade。<br/>
 alwaysAnimation(Boolean) | 默认情况下仅在图片是从磁盘或者网络加载出来时才做动画，可通过此方法设置总是做动画
 asBitmap() | 当设置了GifDecoder时，默认情况下只要图片是GIF图片，则用GifDecoder解码。调用此方法后，只取Gif文件第一帧，返回bitmap
-host(Any) | 传入宿主(Activity/Fragment), 以观察其生命周期，参见[Task](https://github.com/No89757/Task)
+host(Any) | 传入宿主(Activity/Fragment), 以观察其生命周期
 cacheInterceptor(CacheInterceptor) | 用于缓存原图到指定目录
 | | |
 preLoad() | 预加载

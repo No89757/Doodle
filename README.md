@@ -6,7 +6,7 @@ Doodle is an efficient image loader (Android platform).
 
 Doodle's API design refers to Picasso and Glide, so if you have used a similar image loader, it's easy to get start.
 Compared to Picasso, Doodle's implementation has more detail (cache design, life cycle, task scheduling, GIF support, decoding etc.);
-Compared to Glide, Doodle's implementation is more lightweight (400+ methods, 104K aar).
+Compared to Glide, Doodle's implementation is more lightweight.
 
 
 ## Download

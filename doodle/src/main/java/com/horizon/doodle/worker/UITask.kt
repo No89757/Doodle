@@ -1,13 +1,13 @@
-package com.horizon.doodle.task
+package com.horizon.doodle.worker
 
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
 import android.text.TextUtils
 import android.util.Log
-import com.horizon.doodle.task.lifecycle.LifeEvent
-import com.horizon.doodle.task.lifecycle.LifeListener
-import com.horizon.doodle.task.lifecycle.LifecycleManager
+import com.horizon.doodle.worker.lifecycle.LifeEvent
+import com.horizon.doodle.worker.lifecycle.LifeListener
+import com.horizon.doodle.worker.lifecycle.LifecycleManager
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 

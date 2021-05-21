@@ -1,4 +1,4 @@
-package com.horizon.doodle.task.lifecycle
+package com.horizon.doodle.worker.lifecycle
 
 import java.lang.ref.WeakReference
 import java.util.*

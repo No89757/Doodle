@@ -1,4 +1,4 @@
-package com.horizon.doodle.task
+package com.horizon.doodle.worker
 
 import java.util.*
 import java.util.concurrent.Future
