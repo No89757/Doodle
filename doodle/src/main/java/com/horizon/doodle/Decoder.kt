@@ -5,7 +5,7 @@ import android.media.ExifInterface
 import android.util.Log
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import com.horizon.task.base.LogProxy
+import com.horizon.doodle.task.LogProxy
 import java.io.IOException
 
 /**

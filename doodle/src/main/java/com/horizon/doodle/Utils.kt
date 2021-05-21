@@ -12,9 +12,9 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
-import com.horizon.task.base.LogProxy
-import com.horizon.task.lifecycle.LifeEvent
-import com.horizon.task.lifecycle.LifecycleManager
+import com.horizon.doodle.task.LogProxy
+import com.horizon.doodle.task.lifecycle.LifeEvent
+import com.horizon.doodle.task.lifecycle.LifecycleManager
 import java.io.*
 
 internal object Utils {
@@ -52,7 +52,7 @@ internal object Utils {
             override fun onActivityStopped(activity: Activity) {
             }
 
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
             }
 
             override fun onActivityDestroyed(activity: Activity) {

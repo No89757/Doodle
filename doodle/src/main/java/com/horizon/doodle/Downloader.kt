@@ -1,6 +1,6 @@
 package com.horizon.doodle
 
-import com.horizon.task.base.LogProxy
+import com.horizon.doodle.task.LogProxy
 import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.OkHttpClient

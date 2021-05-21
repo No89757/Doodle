@@ -1,5 +1,4 @@
 ## Doodle
-[ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion)
 
 Doodle是一个轻量高效的图片加载框架。<br/>
 

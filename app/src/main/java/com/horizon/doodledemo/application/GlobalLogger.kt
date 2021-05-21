@@ -1,12 +1,12 @@
 package com.horizon.doodledemo.application
 
 import android.util.Log
+import com.horizon.doodle.task.ILogger
 
-import com.horizon.task.base.TaskLogger
 import com.horizon.doodledemo.BuildConfig
 
 
-object GlobalLogger : TaskLogger {
+object GlobalLogger : ILogger {
     override val isDebug: Boolean
         get() = BuildConfig.DEBUG
 

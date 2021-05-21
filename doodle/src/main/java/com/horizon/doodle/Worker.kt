@@ -6,11 +6,11 @@ import android.os.Process
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
-import com.horizon.task.UITask
-import com.horizon.task.base.LogProxy
-import com.horizon.task.executor.LaneExecutor
-import com.horizon.task.executor.PipeExecutor
-import com.horizon.task.executor.TaskExecutor
+import com.horizon.doodle.task.TagExecutor
+import com.horizon.doodle.task.LogProxy
+import com.horizon.doodle.task.PipeExecutor
+import com.horizon.doodle.task.PriorityExecutor
+import com.horizon.doodle.task.UITask
 import java.io.File
 import java.io.InterruptedIOException
 import java.lang.ref.WeakReference
@@ -20,7 +20,7 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
 
     private var fromDiskCache = false
 
-    override val executor: TaskExecutor
+    override val executor: PriorityExecutor
         get() = loadingExecutor
 
     private val target: ImageView?
@@ -139,7 +139,7 @@ internal class Worker(private val request: Request, imageView: ImageView?) : UIT
     companion object {
         private val cpuCount = Runtime.getRuntime().availableProcessors()
         private val windowSize = Math.max(4, Math.min(cpuCount + 1, 6))
-        private val loadingExecutor = LaneExecutor(PipeExecutor(windowSize))
+        private val loadingExecutor = TagExecutor(PipeExecutor(windowSize))
         private val storageExecutor = PipeExecutor(1)
 
         private fun storeResult(key: Long, bitmap: Bitmap) {

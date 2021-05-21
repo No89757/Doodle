@@ -8,7 +8,7 @@ import android.util.SparseArray
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import com.horizon.task.base.LogProxy
+import com.horizon.doodle.task.LogProxy
 import java.util.concurrent.TimeUnit
 
 

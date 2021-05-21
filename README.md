@@ -1,5 +1,4 @@
 ## Doodle
-[ ![Download](https://api.bintray.com/packages/horizon757/maven/Doodle/images/download.svg) ](https://bintray.com/horizon757/maven/Doodle/_latestVersion) 
 
 [中文文档](README_CN.md)
 
